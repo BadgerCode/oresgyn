@@ -1,27 +1,63 @@
 include("sh_rounds.lua")
 
+util.AddNetworkString(NET_ROUND_STATUS_ON_JOIN)
 util.AddNetworkString(NET_ROUND_STATUS_UPDATE)
+
+PREP_TIME = 5
+END_TIME = 5
+ROUND_TIME = 5
 
 local roundStatus = ROUND_WAIT
 
-function restartRound()
+function roundWaitForPlayers()
     setRoundStatus(ROUND_WAIT)
 
-    timer.Simple(5, function()
+    timer.Create(TIMER_WAIT_PLAYERS, 2, 0, function()
+        if(player.GetCount() > 0) then
+            print("Enough players have joined")
+            restartRound()
+            timer.Destroy(TIMER_WAIT_PLAYERS)
+        end
+    end)
+end
+
+function restartRound()
+    setRoundStatus(ROUND_PREPARE)
+
+    for k, ply in pairs(player.GetAll()) do
+        if(!ply:IsSpectator()) then
+            ply:SetSpectator()
+        end
+    end
+
+    timer.Simple(PREP_TIME, function()
         beginRound()
     end)
 end
 
 function beginRound()
     setRoundStatus(ROUND_ACTIVE)
+    for k, ply in pairs(player.GetAll()) do
+        ply:SpawnForRound()
+    end
+
+    timer.Simple(ROUND_TIME, function()
+        endRound()
+    end)
 end
 
 function endRound()
     setRoundStatus(ROUND_OVER)
 
-    timer.Simple(5, function()
+    timer.Simple(END_TIME, function()
         restartRound()
     end)
+end
+
+function sendPlayerCurrentRoundStatus(ply)
+    net.Start(NET_ROUND_STATUS_ON_JOIN)
+        net.WriteInt(roundStatus, 4)
+    net.Send(ply)
 end
 
 function setRoundStatus(status)
@@ -34,4 +70,8 @@ end
 
 function getRoundStatus()
     return roundStatus
+end
+
+function isRoundActive()
+    return getRoundStatus == ROUND_ACTIVE
 end
