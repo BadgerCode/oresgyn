@@ -1,0 +1,10 @@
+"oresgyn"
+{
+	"base"		"base"
+	"title"		"Oresgyn"
+	"menusystem"	"1"
+	"settings"
+	{
+		
+	}
+}
