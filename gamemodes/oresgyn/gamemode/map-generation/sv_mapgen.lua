@@ -26,18 +26,12 @@ function generateMap()
         pos.y = mins.y
 
         for j=0, mapTileDimensions.y, 1 do
-            local plate = ents.Create("prop_physics")
+            local plate = ents.Create("map_tile_floor")
             if(IsValid(plate)) then
                 table.insert(mapProps, plate)
-                plate:SetMoveType(MOVETYPE_NONE)
                 plate:SetModel(mapFeatures.floor.Model)
                 plate:SetPos(pos)
                 plate:Spawn()
-
-                local phys = plate:GetPhysicsObject()
-                if(IsValid(phys)) then
-                    phys:EnableMotion(false)
-                end
             end
 
             pos.y = pos.y + mapFeatures.floor.Size.y
