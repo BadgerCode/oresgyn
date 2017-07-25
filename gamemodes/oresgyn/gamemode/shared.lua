@@ -7,7 +7,7 @@ TEAM_ALIVE = 1
 
 
 function GM:CreateTeams()
-    team.SetUp(TEAM_ALIVE, "Alive Players", Color(50, 50, 200, 255), false)
+    team.SetUp(TEAM_ALIVE, "Alive Players", Color(100, 100, 200, 255), false)
     team.SetUp(TEAM_SPECTATOR, "Spectators", Color(200, 200, 200, 255), true)
 end
 

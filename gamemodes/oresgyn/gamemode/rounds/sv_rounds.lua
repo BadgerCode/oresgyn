@@ -5,7 +5,7 @@ util.AddNetworkString(NET_ROUND_STATUS_UPDATE)
 
 PREP_TIME = 5
 END_TIME = 5
-ROUND_TIME = 5
+ROUND_TIME = 60
 
 local roundStatus = ROUND_WAIT
 
@@ -24,6 +24,8 @@ end
 function restartRound()
     setRoundStatus(ROUND_PREPARE)
 
+    destroyMap()
+
     for k, ply in pairs(player.GetAll()) do
         if(!ply:IsSpectator()) then
             ply:SetSpectator()
@@ -37,6 +39,9 @@ end
 
 function beginRound()
     setRoundStatus(ROUND_ACTIVE)
+
+    generateMap()
+
     for k, ply in pairs(player.GetAll()) do
         ply:SpawnForRound()
     end
@@ -47,6 +52,7 @@ function beginRound()
 end
 
 function endRound()
+    if roundStatus == ROUND_OVER then return end
     setRoundStatus(ROUND_OVER)
 
     timer.Simple(END_TIME, function()
