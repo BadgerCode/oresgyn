@@ -22,7 +22,7 @@ function GM:PlayerSpawn(ply)
     if ply:IsSpectator() then
         ply:Spectate(OBS_MODE_ROAMING)
     else
-        ply:SetJumpPower(0)
+        ply:SetModel( "models/player/odessa.mdl" )
         ply:SetPos(Vector(-128.000000,384.000000,-12284.080078))
     end
 end

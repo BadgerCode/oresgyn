@@ -3,7 +3,7 @@ local mapTileDimensions = { x = 25, y = 25 }
 local mapFeatures = {
     floor = {
         Model = Model("models/hunter/plates/plate3x3.mdl"),
-        Size = Vector(142.350006, 142.349991, 3.5)
+        Size = Vector(142.600006, 142.599991, 3.5)
     }
 }
 local mins = { 
