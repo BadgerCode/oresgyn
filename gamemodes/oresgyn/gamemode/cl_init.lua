@@ -5,10 +5,10 @@ function GM:CalcView(ply, origin, angles, fox, znear, zfar)
     if(!ply:IsSpectator()) then
         local view = { }
 
-        view.origin = origin + Vector(0, 0, 200)
-        view.angles = angles--Vector(0, 90, 0)
+        view.origin = origin + Vector(0, 0, 400)
+        view.angles = Vector(90, 0, 0)
         view.fov = fov
-        view.drawviwer = true
+        view.drawviewer = true
         return view
     end
 end
