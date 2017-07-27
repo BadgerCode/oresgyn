@@ -20,10 +20,21 @@ if SERVER then
     end
 
     function ENT:StartTouch(entity)
-        if(!self.OwnerPlayer and entity:IsPlayer()) then
+        if(!entity:IsPlayer()) then return end
+
+        local oldOwner = self.OwnerPlayer
+
+        if(oldOwner != entity) then
             self.OwnerPlayer = entity
             self:SetColor(self.OwnerPlayer.tileColour)
+            self.OwnerPlayer:AddTile()
+
+            if(IsValid(oldOwner)) then
+                oldOwner:RemoveTile()
+            end
         end
+
+
     end
 end
 

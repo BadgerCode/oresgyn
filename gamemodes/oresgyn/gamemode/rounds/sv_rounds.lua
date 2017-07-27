@@ -45,6 +45,7 @@ function beginRound()
 
     for k, ply in pairs(player.GetAll()) do
         ply:SpawnForRound()
+        ply:ResetScore()
     end
 
     timer.Simple(ROUND_TIME, function()
