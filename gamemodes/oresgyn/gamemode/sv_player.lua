@@ -12,3 +12,11 @@ end
 function plymeta:RemoveTile()
     self.NumTiles = self.NumTiles - 1
 end
+
+function plymeta:GetActiveTile()
+    return self.ActiveTile
+end
+
+function plymeta:SetActiveTile(tileEntity)
+    self.ActiveTile = tileEntity
+end

@@ -1,14 +1,9 @@
 local mapMiddle = Vector(-128.000000, 384.000000, -12287.080078)
-local mapTileDimensions = { x = 25, y = 25 }
-local mapFeatures = {
-    floor = {
-        Model = Model("models/hunter/plates/plate3x3.mdl"),
-        Size = Vector(142.600006, 142.599991, 3.5)
-    }
-}
+local mapDimensionsInTiles = { x = 25, y = 25 }
+local mapTileSize = { x = 142.600006, y = 142.599991 }
 local mins = { 
-    x = mapMiddle.x - (mapTileDimensions.x * mapFeatures.floor.Size.x) / 2, 
-    y = mapMiddle.y - (mapTileDimensions.y * mapFeatures.floor.Size.y) / 2
+    x = mapMiddle.x - (mapDimensionsInTiles.x * mapTileSize.x) / 2, 
+    y = mapMiddle.y - (mapDimensionsInTiles.y * mapTileSize.y) / 2
 }
 
 local mapProps = {}
@@ -25,24 +20,35 @@ function generateMap()
     local pos = mapMiddle
     pos.x = mins.x
 
-    for i=0, mapTileDimensions.x, 1 do
+    for i=0, mapDimensionsInTiles.x - 1, 1 do
         mapTiles[i] = {}
         pos.y = mins.y
 
-        for j=0, mapTileDimensions.y, 1 do
+        for j=0, mapDimensionsInTiles.y - 1, 1 do
             local plate = ents.Create("map_tile_floor")
             if(IsValid(plate)) then
                 mapTiles[i][j] = plate
                 table.insert(mapProps, plate)
-                plate:SetModel(mapFeatures.floor.Model)
                 plate:SetPos(pos)
                 plate:Spawn()
+
+                if(i == 0) then
+                    plate:AddBottomWall()
+                elseif(i == mapDimensionsInTiles.x - 1) then
+                    plate:AddTopWall()
+                end
+
+                if(j == 0) then
+                    plate:AddRightWall()
+                elseif(j == mapDimensionsInTiles.y - 1) then
+                    plate:AddLeftWall()
+                end
             end
 
-            pos.y = pos.y + mapFeatures.floor.Size.y
+            pos.y = pos.y + mapTileSize.y
         end
 
-        pos.x = pos.x + mapFeatures.floor.Size.x
+        pos.x = pos.x + mapTileSize.x
     end
 
     generateMapSpawns()
@@ -58,13 +64,13 @@ function generateMapSpawns()
         local y = 0
         local spawnExists = true
         while(spawnExists) do
-            x = math.random(0, mapTileDimensions.x - 1)
-            y = math.random(0, mapTileDimensions.y - 1)
+            x = math.random(0, mapDimensionsInTiles.x - 1)
+            y = math.random(0, mapDimensionsInTiles.y - 1)
 
             spawnExists = usedSpawns[x] and usedSpawns[x][y]
         end
 
-        ply.SpawnPos = Vector(mins.x + x * mapFeatures.floor.Size.x, mins.y + y * mapFeatures.floor.Size.y, mapMiddle.z + 10)
+        ply.SpawnPos = Vector(mins.x + x * mapTileSize.x, mins.y + y * mapTileSize.y, mapMiddle.z + 10)
     end
 end
 
@@ -79,4 +85,8 @@ function destroyMap()
     table.Empty(mapProps)
 
     print("Map destroyed")
+end
+
+function getMapTileSize()
+    return mapTileSize
 end
