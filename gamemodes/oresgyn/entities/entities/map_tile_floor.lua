@@ -31,19 +31,71 @@ if SERVER then
     function ENT:StartTouch(entity)
         if(!entity:IsPlayer()) then return end
 
+        local plyPreviousTile = entity:GetActiveTile()
+        if IsValid(plyPreviousTile) and plyPreviousTile.OwnerPlayer == entity then
+            plyPreviousTile:RemoveProtectionFromPlayer()
+        end
+
         entity:SetActiveTile(self)
 
-        local oldOwner = self.OwnerPlayer
+        local currentOwner = self.OwnerPlayer
 
-        if(oldOwner != entity) then
+        if(currentOwner == entity) then
+            self:AddProtectionFromPlayer()
+        elseif(!self:IsProtected()) then
             self.OwnerPlayer = entity
             self:SetColor(self.OwnerPlayer.tileColour)
             self.OwnerPlayer:AddTile()
+            self:AddProtectionFromPlayer()
 
-            if(IsValid(oldOwner)) then
-                oldOwner:RemoveTile()
+            if(IsValid(currentOwner)) then
+                currentOwner:RemoveTile()
             end
         end
+    end
+
+    function ENT:AddProtectionFromPlayer()
+        self.ProtectedFromPlayer = true
+
+        if(IsValid(self.LeftNeighbour) and self.LeftNeighbour.OwnerPlayer == self.OwnerPlayer) then 
+            self.LeftNeighbour.ProtectedFromPlayer = true
+        end
+
+        if(IsValid(self.RightNeighbour) and self.RightNeighbour.OwnerPlayer == self.OwnerPlayer) then 
+            self.RightNeighbour.ProtectedFromPlayer = true
+        end
+
+        if(IsValid(self.TopNeighbour) and self.TopNeighbour.OwnerPlayer == self.OwnerPlayer) then 
+            self.TopNeighbour.ProtectedFromPlayer = true
+        end
+
+        if(IsValid(self.BottomNeighbour) and self.BottomNeighbour.OwnerPlayer == self.OwnerPlayer) then 
+            self.BottomNeighbour.ProtectedFromPlayer = true
+        end
+    end
+
+    function ENT:RemoveProtectionFromPlayer()
+        self.ProtectedFromPlayer = false
+
+        if(IsValid(self.LeftNeighbour) and self.LeftNeighbour.OwnerPlayer == self.OwnerPlayer) then 
+            self.LeftNeighbour.ProtectedFromPlayer = false
+        end
+
+        if(IsValid(self.RightNeighbour) and self.RightNeighbour.OwnerPlayer == self.OwnerPlayer) then 
+            self.RightNeighbour.ProtectedFromPlayer = false
+        end
+
+        if(IsValid(self.TopNeighbour) and self.TopNeighbour.OwnerPlayer == self.OwnerPlayer) then 
+            self.TopNeighbour.ProtectedFromPlayer = false
+        end
+
+        if(IsValid(self.BottomNeighbour) and self.BottomNeighbour.OwnerPlayer == self.OwnerPlayer) then 
+            self.BottomNeighbour.ProtectedFromPlayer = false
+        end
+    end
+
+    function ENT:IsProtected()
+        return self.ProtectedFromPlayer
     end
 
     function ENT:AddLeftWall()
