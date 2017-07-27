@@ -21,6 +21,9 @@ end
 function GM:PlayerSpawn(ply)
     if ply:IsSpectator() then
         ply:Spectate(OBS_MODE_ROAMING)
+        if(IsValid(ply.SpectatorTargetPos)) then
+            ply:SetEyeTarget(ply.SpectatorTargetPos)
+        end
     else
         ply:SetModel( "models/player/odessa.mdl" )
         ply:SetPos(ply.SpawnPos)

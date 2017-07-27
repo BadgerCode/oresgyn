@@ -2,11 +2,9 @@ local plymeta = FindMetaTable( "Player" )
 if not plymeta then Error("FAILED TO FIND PLAYER TABLE") return end
 
 function plymeta:SetSpectator()
-    self:SetTeam(TEAM_SPECTATOR)
+    if self:IsSpectator() then return end
 
-    if(self:Alive()) then
-        self:Spawn()
-    end
+    self:SetTeam(TEAM_SPECTATOR)
 end
 
 function plymeta:SetAlive()

@@ -30,6 +30,7 @@ function restartRound()
         if(!ply:IsSpectator()) then
             ply:SetSpectator()
         end
+        ply:ResetScore()
     end
 
     timer.Simple(PREP_TIME, function()

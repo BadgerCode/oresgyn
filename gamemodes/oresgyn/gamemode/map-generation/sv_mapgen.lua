@@ -6,8 +6,6 @@ local mins = {
     y = mapMiddle.y - (mapDimensionsInTiles.y * mapTileSize.y) / 2
 }
 
-local mapProps = {}
-
 local mapGenerated = false
 
 local mapTiles = {}
@@ -28,7 +26,6 @@ function generateMap()
             local plate = ents.Create("map_tile_floor")
             if(IsValid(plate)) then
                 mapTiles[i][j] = plate
-                table.insert(mapProps, plate)
                 plate:SetPos(pos)
                 plate:Spawn()
 
@@ -88,11 +85,13 @@ function destroyMap()
     if(!mapGenerated) then return end
     mapGenerated = false
 
-    for k, v in pairs(mapProps) do
-        v:Remove()
+    for k, col in pairs(mapTiles) do
+        for _, tile in pairs(col) do
+            tile:Remove()
+        end
     end
 
-    table.Empty(mapProps)
+    table.Empty(mapTiles)
 
     print("Map destroyed")
 end

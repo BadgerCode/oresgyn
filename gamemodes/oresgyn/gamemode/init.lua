@@ -15,10 +15,24 @@ function GM:Initialize()
 end
 
 function GM:PlayerDeath(ply, weapon, killer)
-    ply:SetSpectator()
+    if(!ply:IsSpectator()) then
+        ply.SpectatorPos = ply:GetPos() + Vector(0, 0, 400)
+        ply.SpectatorTargetPos = ply:GetPos()
+        ply:SetSpectator()
+    end
     if team.NumPlayers(TEAM_ALIVE) < 2 then
         endRound()
     end
+end
+
+function GM:PostPlayerDeath(ply)
+    if(ply:IsSpectator()) then
+        ply:Spawn()
+    end
+end
+
+function GM:PlayerDeathSound()
+    return true -- This actually means DON'T play the death sound
 end
 
 function GM:CanPlayerSuicide(ply)
