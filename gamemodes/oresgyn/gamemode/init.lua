@@ -5,6 +5,7 @@ AddCSLuaFile("rounds/sh_rounds.lua")
 AddCSLuaFile("sh_player.lua")
 
 include("shared.lua")
+include("sv_player_colours.lua")
 include("rounds/sv_rounds.lua")
 include("map-generation/sv_mapgen.lua")
 

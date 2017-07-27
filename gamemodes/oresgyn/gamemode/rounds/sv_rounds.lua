@@ -41,6 +41,8 @@ end
 function beginRound()
     setRoundStatus(ROUND_ACTIVE)
 
+    assignPlayersColours()    
+
     for k, ply in pairs(player.GetAll()) do
         ply:SpawnForRound()
     end

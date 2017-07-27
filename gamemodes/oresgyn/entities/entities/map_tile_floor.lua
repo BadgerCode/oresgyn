@@ -6,6 +6,8 @@ ENT.PrintName = "Map Tile Floor"
 
 if SERVER then
     function ENT:Initialize()
+        self:SetColor(Color(50, 50, 50))
+        self:SetMaterial("models/debug/debugwhite", true)
         self:SetMoveType(MOVETYPE_NONE)
         self:SetSolid( SOLID_VPHYSICS )
         self:PhysicsInit( SOLID_VPHYSICS )
@@ -20,7 +22,7 @@ if SERVER then
     function ENT:StartTouch(entity)
         if(!self.OwnerPlayer and entity:IsPlayer()) then
             self.OwnerPlayer = entity
-            self:SetColor(Color(255, 0, 0, 255))
+            self:SetColor(self.OwnerPlayer.tileColour)
         end
     end
 end
