@@ -2,7 +2,7 @@
 function assignPlayersColours()
 	local numPlayers = player.GetCount()
 	local players = player.GetAll()
-	local hue = 0.0
+	local hue = math.random(0, 360)
 	local goldenRatioConjugate = 0.618033988749895
 
 	for k, ply in pairs(players) do

@@ -26,11 +26,11 @@ function GM:CanPlayerSuicide(ply)
 end
 
 function GM:SetupMove(ply, moveData, command)
-    if moveData:KeyDown(IN_JUMP) then
-        moveData:SetButtons(moveData:GetButtons() - IN_JUMP)
-    end
-
     if(!ply:IsSpectator()) then
+        if moveData:KeyDown(IN_JUMP) then
+            moveData:SetButtons(moveData:GetButtons() - IN_JUMP)
+        end
+
         moveData:SetMoveAngles(Angle(0, 0, 0))
 
         if moveData:KeyDown(IN_FORWARD) then

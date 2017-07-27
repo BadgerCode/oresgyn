@@ -54,6 +54,18 @@ if SERVER then
         end
     end
 
+    function ENT:Think()
+        if self:IsProtected() then
+            self:SetColor(Color(50, 50, 200))
+        else
+            if IsValid(self.OwnerPlayer) then
+                self:SetColor(self.OwnerPlayer.tileColour)
+            else
+                self:SetColor(Color(50, 50, 50))
+            end
+        end
+    end
+
     function ENT:AddProtectionFromPlayer()
         self.ProtectedFromPlayer = true
 
