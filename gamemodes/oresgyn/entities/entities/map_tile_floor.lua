@@ -22,6 +22,8 @@ if SERVER then
     function ENT:StartTouch(entity)
         if(!entity:IsPlayer()) then return end
 
+        entity.ActiveTile = self
+
         local oldOwner = self.OwnerPlayer
 
         if(oldOwner != entity) then

@@ -15,19 +15,24 @@ local mapProps = {}
 
 local mapGenerated = false
 
+local mapTiles = {}
+
 function generateMap()
     if(mapGenerated) then return end
     mapGenerated = true
+    mapTiles = {}
 
     local pos = mapMiddle
     pos.x = mins.x
 
     for i=0, mapTileDimensions.x, 1 do
+        mapTiles[i] = {}
         pos.y = mins.y
 
         for j=0, mapTileDimensions.y, 1 do
             local plate = ents.Create("map_tile_floor")
             if(IsValid(plate)) then
+                mapTiles[i][j] = plate
                 table.insert(mapProps, plate)
                 plate:SetModel(mapFeatures.floor.Model)
                 plate:SetPos(pos)
