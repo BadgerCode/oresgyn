@@ -40,7 +40,27 @@ function generateMap()
         pos.x = pos.x + mapFeatures.floor.Size.x
     end
 
+    generateMapSpawns()
+
     print("Map generated")
+end
+
+function generateMapSpawns()
+    local usedSpawns = { }
+
+    for k, ply in pairs(player.GetAll()) do
+        local x = 0
+        local y = 0
+        local spawnExists = true
+        while(spawnExists) do
+            x = math.random(0, mapTileDimensions.x - 1)
+            y = math.random(0, mapTileDimensions.y - 1)
+
+            spawnExists = usedSpawns[x] and usedSpawns[x][y]
+        end
+
+        ply.SpawnPos = Vector(mins.x + x * mapFeatures.floor.Size.x, mins.y + y * mapFeatures.floor.Size.y, mapMiddle.z + 10)
+    end
 end
 
 function destroyMap()

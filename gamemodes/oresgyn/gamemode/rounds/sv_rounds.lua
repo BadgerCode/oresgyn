@@ -25,7 +25,6 @@ function restartRound()
     setRoundStatus(ROUND_PREPARE)
 
     destroyMap()
-    generateMap()
 
     for k, ply in pairs(player.GetAll()) do
         if(!ply:IsSpectator()) then
@@ -41,7 +40,8 @@ end
 function beginRound()
     setRoundStatus(ROUND_ACTIVE)
 
-    assignPlayersColours()    
+    generateMap()
+    assignPlayersColours()
 
     for k, ply in pairs(player.GetAll()) do
         ply:SpawnForRound()

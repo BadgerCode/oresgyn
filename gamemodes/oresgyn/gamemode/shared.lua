@@ -23,6 +23,6 @@ function GM:PlayerSpawn(ply)
         ply:Spectate(OBS_MODE_ROAMING)
     else
         ply:SetModel( "models/player/odessa.mdl" )
-        ply:SetPos(Vector(-128.000000,384.000000,-12284.080078))
+        ply:SetPos(ply.SpawnPos)
     end
 end
