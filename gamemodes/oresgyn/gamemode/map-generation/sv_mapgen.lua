@@ -34,14 +34,24 @@ function generateMap()
 
                 if(i == 0) then
                     plate:AddBottomWall()
-                elseif(i == mapDimensionsInTiles.x - 1) then
-                    plate:AddTopWall()
+                else
+                    plate.BottomNeighbour = mapTiles[i - 1][j]
+                    plate.BottomNeighbour.TopNeighbour = plate
+
+                    if(i == mapDimensionsInTiles.x - 1) then
+                        plate:AddTopWall()
+                    end
                 end
 
                 if(j == 0) then
                     plate:AddRightWall()
-                elseif(j == mapDimensionsInTiles.y - 1) then
-                    plate:AddLeftWall()
+                else
+                    plate.RightNeighbour = mapTiles[i][j - 1]
+                    plate.RightNeighbour.LeftNeighbour = plate
+
+                    if(j == mapDimensionsInTiles.y - 1) then
+                        plate:AddLeftWall()
+                    end
                 end
             end
 
