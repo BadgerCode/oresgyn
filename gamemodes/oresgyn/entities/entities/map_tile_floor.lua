@@ -175,7 +175,7 @@ if SERVER then
             local z = tilePos.z
 
             self.BottomWall:SetPos(Vector(x, y, z))
-            self.BottomWall:SetAngles(Angle(0, 0, 90))
+            self.BottomWall:SetAngles(Angle(90, 0, 0))
             self.BottomWall:Spawn()
         end
     end
