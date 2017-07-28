@@ -4,9 +4,8 @@ ENT.Type = "anim"
 ENT.Base = "base_entity"
 ENT.PrintName = "Map Tile Floor"
 
-if SERVER then
-
-    function ENT:Initialize()
+function ENT:Initialize()
+    if SERVER then
         self:SetColor(Color(50, 50, 50))
         self:SetMaterial("models/debug/debugwhite", true)
         self:SetModel("models/hunter/plates/plate3x3.mdl")
@@ -19,13 +18,36 @@ if SERVER then
         if(IsValid(phys)) then
             phys:EnableMotion(false)
         end
+    elseif CLIENT then
+        self.ProtectionSymbol = ClientsideModel("models/props_c17/streetsign004e.mdl")
+        self.ProtectionSymbol:SetNoDraw(true)
+        self.ProtectionSymbol:SetColor(Color(255, 255, 255))
+        self.ProtectionSymbol:SetPos(self:GetPos() + Vector(0, 0, 20))
+        self.ProtectionSymbol:SetAngles(Angle(0, 0, 90))
     end
+end
 
-    function ENT:OnRemove()
+function ENT:OnRemove()
+    if SERVER then
         self:RemoveLeftWall()
         self:RemoveRightWall()
         self:RemoveTopWall()
         self:RemoveBottomWall()
+    elseif CLIENT then
+        self.ProtectionSymbol:Remove()
+    end
+end
+
+function ENT:SetupDataTables()
+    self:NetworkVar("Bool", 0, "ProtectedFromPlayer")
+    if SERVER then
+        self:SetProtectedFromPlayer(false)
+    end
+end
+
+if SERVER then
+    function ENT:IsProtected()
+        return self:GetProtectedFromPlayer()
     end
 
     function ENT:StartTouch(entity)
@@ -54,60 +76,44 @@ if SERVER then
         end
     end
 
-    function ENT:Think()
-        if self:IsProtected() then
-            self:SetColor(Color(50, 50, 200))
-        else
-            if IsValid(self.OwnerPlayer) then
-                self:SetColor(self.OwnerPlayer.tileColour)
-            else
-                self:SetColor(Color(50, 50, 50))
-            end
-        end
-    end
-
     function ENT:AddProtectionFromPlayer()
-        self.ProtectedFromPlayer = true
+        self:SetProtectedFromPlayer(true)
 
         if(IsValid(self.LeftNeighbour) and self.LeftNeighbour.OwnerPlayer == self.OwnerPlayer) then 
-            self.LeftNeighbour.ProtectedFromPlayer = true
+            self.LeftNeighbour:SetProtectedFromPlayer(true)
         end
 
         if(IsValid(self.RightNeighbour) and self.RightNeighbour.OwnerPlayer == self.OwnerPlayer) then 
-            self.RightNeighbour.ProtectedFromPlayer = true
+            self.RightNeighbour:SetProtectedFromPlayer(true)
         end
 
         if(IsValid(self.TopNeighbour) and self.TopNeighbour.OwnerPlayer == self.OwnerPlayer) then 
-            self.TopNeighbour.ProtectedFromPlayer = true
+            self.TopNeighbour:SetProtectedFromPlayer(true)
         end
 
         if(IsValid(self.BottomNeighbour) and self.BottomNeighbour.OwnerPlayer == self.OwnerPlayer) then 
-            self.BottomNeighbour.ProtectedFromPlayer = true
+            self.BottomNeighbour:SetProtectedFromPlayer(true)
         end
     end
 
     function ENT:RemoveProtectionFromPlayer()
-        self.ProtectedFromPlayer = false
+        self:SetProtectedFromPlayer(false)
 
         if(IsValid(self.LeftNeighbour) and self.LeftNeighbour.OwnerPlayer == self.OwnerPlayer) then 
-            self.LeftNeighbour.ProtectedFromPlayer = false
+            self.LeftNeighbour:SetProtectedFromPlayer(false)
         end
 
         if(IsValid(self.RightNeighbour) and self.RightNeighbour.OwnerPlayer == self.OwnerPlayer) then 
-            self.RightNeighbour.ProtectedFromPlayer = false
+            self.RightNeighbour:SetProtectedFromPlayer(false)
         end
 
         if(IsValid(self.TopNeighbour) and self.TopNeighbour.OwnerPlayer == self.OwnerPlayer) then 
-            self.TopNeighbour.ProtectedFromPlayer = false
+            self.TopNeighbour:SetProtectedFromPlayer(false)
         end
 
         if(IsValid(self.BottomNeighbour) and self.BottomNeighbour.OwnerPlayer == self.OwnerPlayer) then 
-            self.BottomNeighbour.ProtectedFromPlayer = false
+            self.BottomNeighbour:SetProtectedFromPlayer(false)
         end
-    end
-
-    function ENT:IsProtected()
-        return self.ProtectedFromPlayer
     end
 
     function ENT:AddLeftWall()
@@ -169,7 +175,7 @@ if SERVER then
             local z = tilePos.z
 
             self.BottomWall:SetPos(Vector(x, y, z))
-            self.BottomWall:SetAngles(Angle(90, 0, 0))
+            self.BottomWall:SetAngles(Angle(0, 0, 90))
             self.BottomWall:Spawn()
         end
     end
@@ -199,6 +205,12 @@ if SERVER then
     end
 end
 
-function ENT:Draw()
-    self:DrawModel()
+if CLIENT then
+    function ENT:Draw()
+        self:DrawModel()
+
+        if self:GetProtectedFromPlayer() then
+            self.ProtectionSymbol:DrawModel()
+        end
+    end
 end
