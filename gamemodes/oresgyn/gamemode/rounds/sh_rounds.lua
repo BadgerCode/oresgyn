@@ -1,3 +1,5 @@
+AddCSLuaFile()
+
 ROUND_WAIT      = 1
 ROUND_PREPARE   = 2
 ROUND_ACTIVE    = 3

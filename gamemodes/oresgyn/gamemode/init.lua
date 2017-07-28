@@ -1,14 +1,18 @@
 AddCSLuaFile("cl_init.lua")
-AddCSLuaFile("shared.lua")
 AddCSLuaFile("rounds/cl_rounds.lua")
-AddCSLuaFile("rounds/sh_rounds.lua")
-AddCSLuaFile("sh_player.lua")
+AddCSLuaFile("economy/cl_economy.lua")
+AddCSLuaFile("cl_hud.lua")
 
 include("shared.lua")
+include("sh_player.lua")
+include("rounds/sh_rounds.lua")
+include("economy/sh_economy.lua")
+
 include("sv_player_colours.lua")
 include("sv_player.lua")
 include("rounds/sv_rounds.lua")
 include("map-generation/sv_mapgen.lua")
+include("economy/sv_economy.lua")
 
 function GM:Initialize()
     roundWaitForPlayers()

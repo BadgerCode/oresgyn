@@ -1,5 +1,11 @@
 include("shared.lua")
+include("sh_player.lua")
+include("rounds/sh_rounds.lua")
+include("economy/sh_economy.lua")
+
 include("rounds/cl_rounds.lua")
+include("economy/cl_economy.lua")
+include("cl_hud.lua")
 
 function GM:CalcView(ply, origin, angles, fox, znear, zfar)
     if(!ply:IsSpectator()) then

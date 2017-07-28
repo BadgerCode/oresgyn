@@ -1,0 +1,5 @@
+AddCSLuaFile()
+
+NET_ECONOMY_PLAYER_UPDATE = "EconomyPlayerFinancesUpdate"
+
+TIME_BETWEEN_ECONOMY_TICKS = 1

@@ -1,5 +1,3 @@
-include("sh_rounds.lua")
-
 local roundStatus = ROUND_WAIT
 
 local roundStatusMessage = { }
@@ -16,6 +14,10 @@ roundStatusJoinMessage[ROUND_OVER] = roundStatusMessage[ROUND_OVER]
 
 net.Receive(NET_ROUND_STATUS_UPDATE, function(len)
     roundStatus = net.ReadInt(4)
+
+    if(roundStatus == ROUND_ACTIVE) then
+        ResetEconomy()
+    end
 
     LocalPlayer():ChatPrint(roundStatusMessage[roundStatus])
 end)

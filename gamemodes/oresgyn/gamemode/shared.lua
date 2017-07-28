@@ -1,9 +1,9 @@
+AddCSLuaFile()
+
 GM.Name = "Oresgyn"
 GM.Author = "Badger"
 GM.Email = "badger@badgercode.co.uk"
 GM.Website = "https://badgercode.co.uk"
-
-include("sh_player.lua")
 
 TEAM_ALIVE = 1
 

@@ -1,5 +1,3 @@
-include("sh_rounds.lua")
-
 util.AddNetworkString(NET_ROUND_STATUS_ON_JOIN)
 util.AddNetworkString(NET_ROUND_STATUS_UPDATE)
 util.AddNetworkString(NET_ROUND_WINNER)
@@ -46,6 +44,8 @@ function beginRound()
         ply:ResetScore()
     end
 
+    StartEconomy()
+
     timer.Simple(ROUND_TIME, function()
         checkForVictory()
         if isRoundActive() then endRound(nil) end
@@ -56,6 +56,8 @@ function endRound(winner)
     if roundStatus == ROUND_OVER then return end
     setRoundStatus(ROUND_OVER)
     setRoundWinner(winner)
+
+    EndEconomy()
 
     timer.Simple(END_TIME, function()
         restartRound()
