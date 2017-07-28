@@ -28,6 +28,7 @@ end
 function GM:PostPlayerDeath(ply)
     if(ply:IsSpectator()) then
         ply:Spawn()
+        ply:SetPos(ply.SpectatorPos)
     end
 end
 
