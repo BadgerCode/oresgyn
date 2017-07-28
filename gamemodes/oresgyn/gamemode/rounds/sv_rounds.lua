@@ -4,10 +4,6 @@ util.AddNetworkString(NET_ROUND_STATUS_ON_JOIN)
 util.AddNetworkString(NET_ROUND_STATUS_UPDATE)
 util.AddNetworkString(NET_ROUND_WINNER)
 
-PREP_TIME = 5
-END_TIME = 5
-ROUND_TIME = 180
-
 local roundStatus = ROUND_WAIT
 
 function roundWaitForPlayers()
@@ -51,7 +47,8 @@ function beginRound()
     end
 
     timer.Simple(ROUND_TIME, function()
-        endRound()
+        checkForVictory()
+        if isRoundActive() then endRound(nil) end
     end)
 end
 

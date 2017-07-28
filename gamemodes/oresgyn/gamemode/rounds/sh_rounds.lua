@@ -8,3 +8,7 @@ NET_ROUND_STATUS_UPDATE     = "UpdateRoundStatus"
 NET_ROUND_WINNER            = "RoundWinner"
 
 TIMER_WAIT_PLAYERS          = "WaitForPlayers"
+
+PREP_TIME = 5
+END_TIME = 5
+ROUND_TIME = 180
