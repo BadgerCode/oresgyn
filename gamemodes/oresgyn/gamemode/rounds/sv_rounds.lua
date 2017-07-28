@@ -59,6 +59,11 @@ function endRound(winner)
 
     EndEconomy()
 
+    for k, ply in pairs(team.GetPlayers(TEAM_ALIVE)) do
+        ply:SetSpectator()
+        ply:Spawn()
+    end
+
     timer.Simple(END_TIME, function()
         restartRound()
     end)

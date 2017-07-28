@@ -20,13 +20,23 @@ end
 
 function GM:PlayerDisconnected(ply)
     checkForVictory()
+
+    if(!ply:IsSpectator()) then
+        local activeTile = ply:GetActiveTile()
+        if IsValid(activeTile) and activeTile.OwnerPlayer == ply then
+            activeTile:RemoveProtectionFromPlayer()
+        end
+    end
 end
 
 function GM:PlayerDeath(ply, weapon, killer)
     if(!ply:IsSpectator()) then
-        ply.SpectatorPos = ply:GetPos() + Vector(0, 0, 400)
-        ply.SpectatorTargetPos = ply:GetPos()
         ply:SetSpectator()
+
+        local activeTile = ply:GetActiveTile()
+        if IsValid(activeTile) and activeTile.OwnerPlayer == ply then
+            activeTile:RemoveProtectionFromPlayer()
+        end
     end
 
     checkForVictory()
