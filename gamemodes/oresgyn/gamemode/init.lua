@@ -14,15 +14,18 @@ function GM:Initialize()
     roundWaitForPlayers()
 end
 
+function GM:PlayerDisconnected(ply)
+    checkForVictory()
+end
+
 function GM:PlayerDeath(ply, weapon, killer)
     if(!ply:IsSpectator()) then
         ply.SpectatorPos = ply:GetPos() + Vector(0, 0, 400)
         ply.SpectatorTargetPos = ply:GetPos()
         ply:SetSpectator()
     end
-    if team.NumPlayers(TEAM_ALIVE) < 2 then
-        endRound()
-    end
+
+    checkForVictory()
 end
 
 function GM:PostPlayerDeath(ply)

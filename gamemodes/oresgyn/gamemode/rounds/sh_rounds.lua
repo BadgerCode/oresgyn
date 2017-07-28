@@ -5,5 +5,6 @@ ROUND_OVER      = 4
 
 NET_ROUND_STATUS_ON_JOIN    = "RoundStatusOnJoin"
 NET_ROUND_STATUS_UPDATE     = "UpdateRoundStatus"
+NET_ROUND_WINNER            = "RoundWinner"
 
 TIMER_WAIT_PLAYERS          = "WaitForPlayers"

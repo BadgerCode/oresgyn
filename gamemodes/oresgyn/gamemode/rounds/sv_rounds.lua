@@ -2,6 +2,7 @@ include("sh_rounds.lua")
 
 util.AddNetworkString(NET_ROUND_STATUS_ON_JOIN)
 util.AddNetworkString(NET_ROUND_STATUS_UPDATE)
+util.AddNetworkString(NET_ROUND_WINNER)
 
 PREP_TIME = 5
 END_TIME = 5
@@ -54,9 +55,10 @@ function beginRound()
     end)
 end
 
-function endRound()
+function endRound(winner)
     if roundStatus == ROUND_OVER then return end
     setRoundStatus(ROUND_OVER)
+    setRoundWinner(winner)
 
     timer.Simple(END_TIME, function()
         restartRound()
@@ -83,4 +85,26 @@ end
 
 function isRoundActive()
     return getRoundStatus == ROUND_ACTIVE
+end
+
+function setRoundWinner(ply)
+    local winnerName = "Nobody"
+    if IsValid(ply) then winnerName = ply:GetName() end
+
+    net.Start(NET_ROUND_WINNER)
+        net.WriteString(winnerName)
+    net.Broadcast()
+end
+
+function checkForVictory()
+    local numLivingPlayers = team.NumPlayers(TEAM_ALIVE)
+    if numLivingPlayers < 2 then
+        local winner = nil
+        if numLivingPlayers == 1 then
+            winner = team.GetPlayers(TEAM_ALIVE)[1]
+            winner:AddFrags(1)
+        end
+
+        endRound(winner)
+    end
 end

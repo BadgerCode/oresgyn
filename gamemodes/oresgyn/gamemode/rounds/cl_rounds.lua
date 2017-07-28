@@ -25,3 +25,9 @@ net.Receive(NET_ROUND_STATUS_ON_JOIN, function(len)
 
     LocalPlayer():ChatPrint(roundStatusJoinMessage[roundStatus])
 end)
+
+net.Receive(NET_ROUND_WINNER, function(len)
+    roundWinnerName = net.ReadString()
+
+    LocalPlayer():ChatPrint(roundWinnerName .. " won the round!")
+end)
