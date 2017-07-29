@@ -26,6 +26,12 @@ function ENT:Initialize()
         self.ProtectionSymbol:SetColor(Color(255, 255, 255))
         self.ProtectionSymbol:SetPos(self:GetPos() + Vector(0, 0, 20))
         self.ProtectionSymbol:SetAngles(Angle(0, 0, 90))
+
+        self.TowerProtectionSymbol = ClientsideModel("models/props_junk/wood_crate001a.mdl")
+        self.TowerProtectionSymbol:SetModelScale(0.5)
+        self.TowerProtectionSymbol:SetNoDraw(true)
+        self.TowerProtectionSymbol:SetPos(self:GetPos() + Vector(0, 0, 10))
+        self.TowerProtectionSymbol:SetAngles(Angle(0, 0, 90))
     end
 end
 
@@ -44,8 +50,10 @@ end
 
 function ENT:SetupDataTables()
     self:NetworkVar("Bool", 0, "ProtectedFromPlayer")
+    self:NetworkVar("Bool", 1, "ProtectedFromNeighbourTower")
     if SERVER then
         self:SetProtectedFromPlayer(false)
+        self:SetProtectedFromNeighbourTower(false)
     end
 end
 
@@ -188,12 +196,51 @@ if SERVER then
         return IsValid(self.Tower)
     end
 
+    local function TryGiveNeighbourTowerProtection(tile, neighbour)
+        if(IsValid(neighbour) and tile.OwnerPlayer == neighbour.OwnerPlayer) then
+            neighbour:AddProtectionFromNeighbourTower()
+        end
+    end
+
     function ENT:SetTower(towerEnt)
         self.Tower = towerEnt
+
+        TryGiveNeighbourTowerProtection(self, self.TopNeighbour)
+        TryGiveNeighbourTowerProtection(self, self.LeftNeighbour)
+        TryGiveNeighbourTowerProtection(self, self.RightNeighbour)
+        TryGiveNeighbourTowerProtection(self, self.BottomNeighbour)
+    end
+
+    function ENT:RemoveTower()
+        self.Tower = nil
+
+        if IsValid(self.TopNeighbour) then self.TopNeighbour:CheckProtectionFromNeighbourTowers() end
+        if IsValid(self.LeftNeighbour) then self.LeftNeighbour:CheckProtectionFromNeighbourTowers() end
+        if IsValid(self.RightNeighbour) then self.RightNeighbour:CheckProtectionFromNeighbourTowers() end
+        if IsValid(self.BottomNeighbour) then self.BottomNeighbour:CheckProtectionFromNeighbourTowers() end
+    end
+
+    function ENT:AddProtectionFromNeighbourTower()
+        self:SetProtectedFromNeighbourTower(true)
+    end
+
+    local function DoesNeighbourGiveTowerProtection(tile, neighbour)
+        return IsValid(neighbour) 
+                and neighbour:HasTower()
+                and tile.OwnerPlayer == neighbour.OwnerPlayer
+    end
+
+    function ENT:CheckProtectionFromNeighbourTowers()
+        local isProtected = DoesNeighbourGiveTowerProtection(self, self.TopNeighbour)
+                         or DoesNeighbourGiveTowerProtection(self, self.LeftNeighbour)
+                         or DoesNeighbourGiveTowerProtection(self, self.RightNeighbour)
+                         or DoesNeighbourGiveTowerProtection(self, self.BottomNeighbour)
+
+        self:SetProtectedFromNeighbourTower(isProtected)
     end
 
     function ENT:IsProtected()
-        return self:GetProtectedFromPlayer() or self:HasTower()
+        return self:GetProtectedFromPlayer() or self:HasTower() or self:GetProtectedFromNeighbourTower()
     end
 end
 
@@ -201,7 +248,9 @@ if CLIENT then
     function ENT:Draw()
         self:DrawModel()
 
-        if self:GetProtectedFromPlayer() then
+        if self:GetProtectedFromNeighbourTower() then
+            self.TowerProtectionSymbol:DrawModel()
+        elseif self:GetProtectedFromPlayer() then
             self.ProtectionSymbol:DrawModel()
         end
     end

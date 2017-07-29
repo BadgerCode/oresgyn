@@ -15,6 +15,7 @@ function GM:PlayerTouchedTile(ply, tile)
         tile:SetColor(tile.OwnerPlayer.tileColour)
         tile.OwnerPlayer:AddTile()
         tile:AddProtectionFromPlayer()
+        tile:CheckProtectionFromNeighbourTowers()
 
         if(IsValid(currentOwner)) then
             currentOwner:RemoveTile()
