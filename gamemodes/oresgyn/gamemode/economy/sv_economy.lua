@@ -2,7 +2,7 @@ util.AddNetworkString(NET_ECONOMY_PLAYER_UPDATE)
 util.AddNetworkString(NET_ECONOMY_INCOME_UPDATE)
 
 local TIMER_ECONOMY = "EconomyTimer"
-local TILE_VALUE = 5
+local TILE_VALUE = 1
 
 local function SendPlayerFinanceUpdate(ply, income)
     net.Start(NET_ECONOMY_PLAYER_UPDATE)
