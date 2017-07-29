@@ -59,6 +59,11 @@ end
 
 function GM:SetupMove(ply, moveData, command)
     if(!ply:IsSpectator()) then
+
+        if moveData:KeyPressed(IN_JUMP) then
+            BuyTower(ply)
+        end
+
         if moveData:KeyDown(IN_JUMP) then
             moveData:SetButtons(moveData:GetButtons() - IN_JUMP)
         end

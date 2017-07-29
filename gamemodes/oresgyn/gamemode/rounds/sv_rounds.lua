@@ -42,6 +42,7 @@ function beginRound()
     for k, ply in pairs(player.GetAll()) do
         ply:SpawnForRound()
         ply:ResetScore()
+        ply:ResetOwnedTowers()
     end
 
     StartEconomy()

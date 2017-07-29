@@ -23,7 +23,7 @@ function GM:HUDPaint()
     end
 
     local moneyMsg = "£" .. GetMoney()
-    local incomeMsg = incomePrefix .. "£" .. income
+    local incomeMsg = incomePrefix .. "£" .. math.abs(income)
 
     draw.RoundedBox(4, 
                     ScrW() / 2 - topBar.width / 2, padding, 

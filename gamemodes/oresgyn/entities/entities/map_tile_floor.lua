@@ -14,6 +14,8 @@ function ENT:Initialize()
         self:PhysicsInit( SOLID_VPHYSICS )
         self:SetTrigger( true )
 
+        self.has_tower = false
+
         local phys = self:GetPhysicsObject()
         if(IsValid(phys)) then
             phys:EnableMotion(false)
@@ -46,10 +48,6 @@ function ENT:SetupDataTables()
 end
 
 if SERVER then
-    function ENT:IsProtected()
-        return self:GetProtectedFromPlayer()
-    end
-
     function ENT:StartTouch(entity)
         if(!entity:IsPlayer()) then return end
 
@@ -73,6 +71,11 @@ if SERVER then
             if(IsValid(currentOwner)) then
                 currentOwner:RemoveTile()
                 RecalculateIncome(currentOwner)
+            end
+
+            if(IsValid(self.Tower)) then
+                self.Tower:Remove()
+                self.has_tower = false
             end
 
             RecalculateIncome(entity)
@@ -205,6 +208,27 @@ if SERVER then
         if(IsValid(self.BottomWall))then
             self.BottomWall:Remove()
         end
+    end
+
+    function ENT:HasTower()
+        return self.has_tower
+    end
+
+    function ENT:AddTower()
+        if self.has_tower then return end
+
+        self.Tower = ents.Create("map_tower")
+        if IsValid(self.Tower) then
+            self.has_tower = true
+
+            self.Tower:SetPos(self:GetPos() + Vector(0, 0, 10))
+            self.Tower:SetOwner(self.OwnerPlayer)
+            self.Tower:Spawn()
+        end
+    end
+
+    function ENT:IsProtected()
+        return self:GetProtectedFromPlayer() or self:HasTower()
     end
 end
 

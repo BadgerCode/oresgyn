@@ -1,5 +1,3 @@
-AddCSLuaFile()
-
 local plymeta = FindMetaTable( "Player" )
 if not plymeta then Error("FAILED TO FIND PLAYER TABLE") return end
 
@@ -27,6 +25,10 @@ function plymeta:SetActiveTile(tileEntity)
     self.ActiveTile = tileEntity
 end
 
+function plymeta:OwnsActiveTile()
+    return IsValid(self.ActiveTile) and self.ActiveTile.OwnerPlayer == self
+end
+
 function plymeta:GetMoney()
     return self.Money
 end
@@ -37,4 +39,16 @@ end
 
 function plymeta:ResetMoney()
     self.Money = 0
+end
+
+function plymeta:ResetOwnedTowers()
+    self.OwnedTowers = 0
+end
+
+function plymeta:AddOwnedTower()
+    self.OwnedTowers = self.OwnedTowers + 1
+end
+
+function plymeta:GetNumOwnedTowers()
+    return self.OwnedTowers
 end

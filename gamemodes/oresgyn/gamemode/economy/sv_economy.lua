@@ -3,6 +3,8 @@ util.AddNetworkString(NET_ECONOMY_INCOME_UPDATE)
 
 local TIMER_ECONOMY = "EconomyTimer"
 local TILE_VALUE = 1
+local TOWER_COST_PER_TURN = TILE_VALUE * 5
+local TOWER_INITIAL_COST = TOWER_COST_PER_TURN * 3
 
 local function SendPlayerFinanceUpdate(ply, income)
     net.Start(NET_ECONOMY_PLAYER_UPDATE)
@@ -12,7 +14,7 @@ local function SendPlayerFinanceUpdate(ply, income)
 end
 
 local function CalculateIncome(ply)
-    return ply:GetNumTiles() * TILE_VALUE
+    return ply:GetNumTiles() * TILE_VALUE - ply:GetNumOwnedTowers() * TOWER_COST_PER_TURN
 end
 
 function StartEconomy()
@@ -40,4 +42,16 @@ function RecalculateIncome(ply)
     net.Start(NET_ECONOMY_INCOME_UPDATE)
         net.WriteInt(income, 32)
     net.Send(ply)
+end
+
+function BuyTower(ply)
+    if(!ply:OwnsActiveTile()) then return end
+    if(ply:GetActiveTile():HasTower()) then return end
+    if(ply:GetMoney() < TOWER_INITIAL_COST) then return end
+    
+    ply:AddMoney(-TOWER_INITIAL_COST)
+    ply:AddOwnedTower()
+    ply:GetActiveTile():AddTower()
+
+    SendPlayerFinanceUpdate(ply, CalculateIncome(ply))
 end
