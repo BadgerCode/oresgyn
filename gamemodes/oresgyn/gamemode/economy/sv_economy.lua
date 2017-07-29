@@ -44,14 +44,14 @@ function RecalculateIncome(ply)
     net.Send(ply)
 end
 
-function BuyTower(ply)
-    if(!ply:OwnsActiveTile()) then return end
-    if(ply:GetActiveTile():HasTower()) then return end
-    if(ply:GetMoney() < TOWER_INITIAL_COST) then return end
-    
-    ply:AddMoney(-TOWER_INITIAL_COST)
-    ply:AddOwnedTower()
-    ply:GetActiveTile():AddTower()
+function CanPlayerAffordTower(ply)
+    return ply:GetMoney() >= TOWER_INITIAL_COST
+end
 
+function BuyTower(ply)
+    ply:AddMoney(-TOWER_INITIAL_COST)
+end
+
+function UpdatePlayerFinances(ply)
     SendPlayerFinanceUpdate(ply, CalculateIncome(ply))
 end

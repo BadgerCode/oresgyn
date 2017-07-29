@@ -42,13 +42,15 @@ function plymeta:ResetMoney()
 end
 
 function plymeta:ResetOwnedTowers()
-    self.OwnedTowers = 0
+    self.OwnedTowers = { }
+    self.NumOwnedTowers = 0
 end
 
-function plymeta:AddOwnedTower()
-    self.OwnedTowers = self.OwnedTowers + 1
+function plymeta:AddOwnedTower(tower)
+    table.insert(self.OwnedTowers, tower)
+    self.NumOwnedTowers = self.NumOwnedTowers + 1
 end
 
 function plymeta:GetNumOwnedTowers()
-    return self.OwnedTowers
+    return self.NumOwnedTowers
 end

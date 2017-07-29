@@ -62,7 +62,7 @@ function GM:SetupMove(ply, moveData, command)
     if(!ply:IsSpectator()) then
 
         if moveData:KeyPressed(IN_JUMP) then
-            BuyTower(ply)
+            hook.Run("PlayerPurchaseTower", ply)
         end
 
         if moveData:KeyDown(IN_JUMP) then

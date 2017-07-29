@@ -186,17 +186,8 @@ if SERVER then
         return self.has_tower
     end
 
-    function ENT:AddTower()
-        if self.has_tower then return end
-
-        self.Tower = ents.Create("map_tower")
-        if IsValid(self.Tower) then
-            self.has_tower = true
-
-            self.Tower:SetPos(self:GetPos() + Vector(0, 0, 10))
-            self.Tower:SetOwner(self.OwnerPlayer)
-            self.Tower:Spawn()
-        end
+    function ENT:SetHasTower(hasTower)
+        self.hasTower = hasTower
     end
 
     function ENT:IsProtected()
