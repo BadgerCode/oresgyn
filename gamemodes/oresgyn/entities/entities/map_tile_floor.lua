@@ -72,7 +72,10 @@ if SERVER then
 
             if(IsValid(currentOwner)) then
                 currentOwner:RemoveTile()
+                RecalculateIncome(currentOwner)
             end
+
+            RecalculateIncome(entity)
         end
     end
 
