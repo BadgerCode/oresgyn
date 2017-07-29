@@ -58,6 +58,17 @@ function GM:CanPlayerSuicide(ply)
     return !ply:IsSpectator()
 end
 
+function GM:PlayerSetModel(ply)
+    ply:SetModel( "models/player/odessa.mdl" )
+end
+
+function GM:PlayerLoadout(ply)
+    if(!ply:IsSpectator()) then
+        ply:Give("weapon_ores_crowbar")
+    end
+    return true
+end
+
 function GM:SetupMove(ply, moveData, command)
     if(!ply:IsSpectator()) then
 

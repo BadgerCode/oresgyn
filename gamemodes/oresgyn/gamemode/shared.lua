@@ -25,7 +25,9 @@ function GM:PlayerSpawn(ply)
             ply:SetEyeTarget(ply.SpectatorTargetPos)
         end
     else
-        ply:SetModel( "models/player/odessa.mdl" )
         ply:SetPos(ply.SpawnPos)
     end
+
+    hook.Call( "PlayerLoadout", GAMEMODE, ply )
+    hook.Call( "PlayerSetModel", GAMEMODE, ply )
 end
