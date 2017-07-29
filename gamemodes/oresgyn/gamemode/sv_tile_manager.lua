@@ -35,7 +35,7 @@ function GM:PlayerPurchaseTower(ply)
 
     local activeTile = ply:GetActiveTile()
 
-    activeTile:SetHasTower(true)
+    activeTile:SetTower(tower)
 
     tower.ProtectedTile = activeTile
     tower:SetPos(activeTile:GetPos() + Vector(0, 0, 10))

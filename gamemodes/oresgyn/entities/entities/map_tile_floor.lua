@@ -14,7 +14,7 @@ function ENT:Initialize()
         self:PhysicsInit( SOLID_VPHYSICS )
         self:SetTrigger( true )
 
-        self.has_tower = false
+        self.Tower = nil
 
         local phys = self:GetPhysicsObject()
         if(IsValid(phys)) then
@@ -35,6 +35,8 @@ function ENT:OnRemove()
         self:RemoveRightWall()
         self:RemoveTopWall()
         self:RemoveBottomWall()
+
+        if IsValid(self.Tower) then self.Tower:Remove() end
     elseif CLIENT then
         self.ProtectionSymbol:Remove()
     end
@@ -183,11 +185,11 @@ if SERVER then
     end
 
     function ENT:HasTower()
-        return self.has_tower
+        return IsValid(self.Tower)
     end
 
-    function ENT:SetHasTower(hasTower)
-        self.hasTower = hasTower
+    function ENT:SetTower(towerEnt)
+        self.Tower = towerEnt
     end
 
     function ENT:IsProtected()
