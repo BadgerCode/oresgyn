@@ -51,35 +51,7 @@ if SERVER then
     function ENT:StartTouch(entity)
         if(!entity:IsPlayer()) then return end
 
-        local plyPreviousTile = entity:GetActiveTile()
-        if IsValid(plyPreviousTile) and plyPreviousTile.OwnerPlayer == entity then
-            plyPreviousTile:RemoveProtectionFromPlayer()
-        end
-
-        entity:SetActiveTile(self)
-
-        local currentOwner = self.OwnerPlayer
-
-        if(currentOwner == entity) then
-            self:AddProtectionFromPlayer()
-        elseif(!self:IsProtected()) then
-            self.OwnerPlayer = entity
-            self:SetColor(self.OwnerPlayer.tileColour)
-            self.OwnerPlayer:AddTile()
-            self:AddProtectionFromPlayer()
-
-            if(IsValid(currentOwner)) then
-                currentOwner:RemoveTile()
-                RecalculateIncome(currentOwner)
-            end
-
-            if(IsValid(self.Tower)) then
-                self.Tower:Remove()
-                self.has_tower = false
-            end
-
-            RecalculateIncome(entity)
-        end
+        hook.Run("PlayerTouchedTile", entity, self)
     end
 
     function ENT:AddProtectionFromPlayer()

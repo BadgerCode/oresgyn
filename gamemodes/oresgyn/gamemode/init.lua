@@ -10,6 +10,7 @@ include("economy/sh_economy.lua")
 
 include("sv_player_colours.lua")
 include("sv_player.lua")
+include("sv_tile_manager.lua")
 include("rounds/sv_rounds.lua")
 include("map-generation/sv_mapgen.lua")
 include("economy/sv_economy.lua")
