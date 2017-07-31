@@ -27,6 +27,11 @@ function StartEconomy()
             local income = CalculateIncome(ply)
             ply:AddMoney(income)
 
+            if(ply:GetMoney() < 0) then
+                ply:ResetMoney()
+                ply:DestroyLastTower()
+            end
+
             SendPlayerFinanceUpdate(ply, income)
         end
     end)

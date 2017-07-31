@@ -259,9 +259,6 @@ function ENT:RemoveTower()
     self:EmitSound(towerDestroySound)
 
     if SERVER then
-        local towerOwner = self.Tower:GetOwner()
-        if (IsValid(towerOwner)) then towerOwner:RemoveOwnedTower(self.Tower) end
-
         self.Tower:Remove()
         self.Tower = nil
 

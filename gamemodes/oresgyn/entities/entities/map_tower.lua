@@ -16,6 +16,11 @@ if SERVER then
             phys:EnableMotion(false)
         end
     end
+
+    function ENT:OnRemove()
+        local owner = self:GetOwner()
+        if (IsValid(owner)) then owner:RemoveOwnedTower(self) end
+    end
 end
 
 function ENT:Draw()

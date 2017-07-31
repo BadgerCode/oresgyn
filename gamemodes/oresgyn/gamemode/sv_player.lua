@@ -46,14 +46,26 @@ function plymeta:ResetOwnedTowers()
     self.NumOwnedTowers = 0
 end
 
+function plymeta:DestroyLastTower()
+    if(self.NumOwnedTowers < 1) then return end
+
+    -- Last tower will have the highest creation Id
+    local tower = self.OwnedTowers[table.maxn(self.OwnedTowers)]
+    tower.ProtectedTile:RemoveTower()
+end
+
 function plymeta:AddOwnedTower(tower)
-    table.insert(self.OwnedTowers, tower:EntIndex(), tower)
+    self.OwnedTowers[tower:GetCreationID()] = tower
     self.NumOwnedTowers = self.NumOwnedTowers + 1
 end
 
 function plymeta:RemoveOwnedTower(tower)
-    table.remove(self.OwnedTowers, tower:EntIndex())
+    if (self.OwnedTowers[tower:GetCreationID()] == nil) then return end
+
+    self.OwnedTowers[tower:GetCreationID()] = nil
     self.NumOwnedTowers = self.NumOwnedTowers - 1
+
+    UpdatePlayerFinances(self)
 end
 
 function plymeta:GetNumOwnedTowers()
