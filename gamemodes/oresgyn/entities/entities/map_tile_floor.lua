@@ -4,6 +4,9 @@ ENT.Type = "anim"
 ENT.Base = "base_entity"
 ENT.PrintName = "Map Tile Floor"
 
+local towerDestroySound = Sound("physics/wood/wood_crate_break5.wav")
+local towerDamageSound = Sound("physics/wood/wood_crate_impact_hard1.wav")
+
 function ENT:Initialize()
     if SERVER then
         self:SetColor(Color(50, 50, 50))
@@ -204,20 +207,12 @@ if SERVER then
 
     function ENT:SetTower(towerEnt)
         self.Tower = towerEnt
+        self.TowerHealth = 3
 
         TryGiveNeighbourTowerProtection(self, self.TopNeighbour)
         TryGiveNeighbourTowerProtection(self, self.LeftNeighbour)
         TryGiveNeighbourTowerProtection(self, self.RightNeighbour)
         TryGiveNeighbourTowerProtection(self, self.BottomNeighbour)
-    end
-
-    function ENT:RemoveTower()
-        self.Tower = nil
-
-        if IsValid(self.TopNeighbour) then self.TopNeighbour:CheckProtectionFromNeighbourTowers() end
-        if IsValid(self.LeftNeighbour) then self.LeftNeighbour:CheckProtectionFromNeighbourTowers() end
-        if IsValid(self.RightNeighbour) then self.RightNeighbour:CheckProtectionFromNeighbourTowers() end
-        if IsValid(self.BottomNeighbour) then self.BottomNeighbour:CheckProtectionFromNeighbourTowers() end
     end
 
     function ENT:AddProtectionFromNeighbourTower()
@@ -241,6 +236,39 @@ if SERVER then
 
     function ENT:IsProtected()
         return self:GetProtectedFromPlayer() or self:HasTower() or self:GetProtectedFromNeighbourTower()
+    end
+
+    function ENT:IsProtectedFromTower()
+        return self:HasTower() or self:GetProtectedFromNeighbourTower()
+    end
+end
+
+function ENT:DamageTower()
+    self:EmitSound(towerDamageSound)
+
+    if SERVER then
+        self.TowerHealth = self.TowerHealth - 1
+
+        if(self.TowerHealth <= 0) then
+            self:RemoveTower()
+        end
+    end
+end
+
+function ENT:RemoveTower()
+    self:EmitSound(towerDestroySound)
+
+    if SERVER then
+        local towerOwner = self.Tower:GetOwner()
+        if (IsValid(towerOwner)) then towerOwner:RemoveOwnedTower(self.Tower) end
+
+        self.Tower:Remove()
+        self.Tower = nil
+
+        if IsValid(self.TopNeighbour) then self.TopNeighbour:CheckProtectionFromNeighbourTowers() end
+        if IsValid(self.LeftNeighbour) then self.LeftNeighbour:CheckProtectionFromNeighbourTowers() end
+        if IsValid(self.RightNeighbour) then self.RightNeighbour:CheckProtectionFromNeighbourTowers() end
+        if IsValid(self.BottomNeighbour) then self.BottomNeighbour:CheckProtectionFromNeighbourTowers() end
     end
 end
 

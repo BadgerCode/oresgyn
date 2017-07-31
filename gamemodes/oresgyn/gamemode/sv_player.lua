@@ -47,8 +47,13 @@ function plymeta:ResetOwnedTowers()
 end
 
 function plymeta:AddOwnedTower(tower)
-    table.insert(self.OwnedTowers, tower)
+    table.insert(self.OwnedTowers, tower:EntIndex(), tower)
     self.NumOwnedTowers = self.NumOwnedTowers + 1
+end
+
+function plymeta:RemoveOwnedTower(tower)
+    table.remove(self.OwnedTowers, tower:EntIndex())
+    self.NumOwnedTowers = self.NumOwnedTowers - 1
 end
 
 function plymeta:GetNumOwnedTowers()
