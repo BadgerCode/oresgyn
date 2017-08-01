@@ -70,13 +70,18 @@ function GM:PlayerLoadout(ply)
     return true
 end
 
+function GM:KeyPress(ply, key)
+    if(ply:IsSpectator() or !isRoundActive()) then return end
+
+    if key == IN_USE then
+        ply:BuyMoveSpeed()
+    elseif key == IN_JUMP then
+        hook.Run("PlayerPurchaseTower", ply)
+    end
+end
+
 function GM:SetupMove(ply, moveData, command)
     if(!ply:IsSpectator()) then
-
-        if moveData:KeyPressed(IN_JUMP) then
-            hook.Run("PlayerPurchaseTower", ply)
-        end
-
         if moveData:KeyDown(IN_JUMP) then
             moveData:SetButtons(moveData:GetButtons() - IN_JUMP)
         end

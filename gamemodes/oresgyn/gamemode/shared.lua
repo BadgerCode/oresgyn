@@ -29,6 +29,7 @@ function GM:PlayerSpawn(ply)
         end
     else
         ply:SetPos(ply.SpawnTile:GetPos() + Vector(0, 0, 10))
+        ply:ResetMoveSpeed()
     end
 
     hook.Call( "PlayerLoadout", GAMEMODE, ply )

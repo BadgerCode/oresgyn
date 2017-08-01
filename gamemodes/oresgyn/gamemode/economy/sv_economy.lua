@@ -5,6 +5,8 @@ local TIMER_ECONOMY = "EconomyTimer"
 local TILE_VALUE = 1
 local TOWER_COST_PER_TURN = TILE_VALUE * 5
 local TOWER_INITIAL_COST = TOWER_COST_PER_TURN * 3
+local MOVE_SPEED_INITIAL_COST = TILE_VALUE * 20
+local MOVE_SPEED_COST_PER_TURN = TILE_VALUE * 3
 
 local function SendPlayerFinanceUpdate(ply, income)
     net.Start(NET_ECONOMY_PLAYER_UPDATE)
@@ -14,7 +16,7 @@ local function SendPlayerFinanceUpdate(ply, income)
 end
 
 local function CalculateIncome(ply)
-    return ply:GetNumTiles() * TILE_VALUE - ply:GetNumOwnedTowers() * TOWER_COST_PER_TURN
+    return ply:GetNumTiles() * TILE_VALUE - ply:GetNumOwnedTowers() * TOWER_COST_PER_TURN - ply:GetMoveSpeedLevel() * MOVE_SPEED_COST_PER_TURN
 end
 
 function StartEconomy()
@@ -59,4 +61,12 @@ end
 
 function UpdatePlayerFinances(ply)
     SendPlayerFinanceUpdate(ply, CalculateIncome(ply))
+end
+
+function CanAffordMoveSpeedUpgrade(ply)
+    return ply:GetMoney() >= MOVE_SPEED_INITIAL_COST
+end
+
+function BuyMoveSpeed(ply)
+    ply:AddMoney(-MOVE_SPEED_INITIAL_COST)
 end

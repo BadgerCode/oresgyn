@@ -38,7 +38,6 @@ function GM:PlayerPurchaseTower(ply)
     if(!ply:OwnsActiveTile()) then return end
     if(ply:GetActiveTile():HasTower()) then return end
     if(!CanPlayerAffordTower(ply)) then return end
-    if(!isRoundActive()) then return end
     
     local tower = ents.Create("map_tower")
     if !IsValid(tower) then return end
