@@ -17,6 +17,7 @@ net.Receive(NET_ROUND_STATUS_UPDATE, function(len)
 
     if(roundStatus == ROUND_ACTIVE) then
         ResetEconomy()
+        LocalPlayer():ChatPrint("Press SPACE to buy towers and USE (E) to buy speed upgrades.")
     end
 
     LocalPlayer():ChatPrint(roundStatusMessage[roundStatus])
