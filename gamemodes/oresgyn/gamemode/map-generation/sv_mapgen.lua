@@ -1,17 +1,36 @@
+local STARTING_TILES_PER_PLAYER = 24
+local MIN_WIDTH_OR_HEIGHT = 4
+
 local mapMiddle = Vector(-128.000000, 384.000000, -12287.080078)
-local mapDimensionsInTiles = { x = 25, y = 25 }
 local mapTileSize = { x = 142.600006, y = 142.599991 }
+
+local mapSize = { width = 25, height = 25 }
 local mins = { 
-    x = mapMiddle.x - (mapDimensionsInTiles.x * mapTileSize.x) / 2, 
-    y = mapMiddle.y - (mapDimensionsInTiles.y * mapTileSize.y) / 2
+    x = mapMiddle.x - (mapSize.width * mapTileSize.x) / 2,
+    y = mapMiddle.y - (mapSize.height * mapTileSize.y) / 2
 }
 
 local mapGenerated = false
 
+local numTiles = 0
 local mapTiles = {}
 
-local function CalculateMapSize()
+function GetNumTotalTiles()
+    return numTiles
+end
 
+local function CalculateMapSize()
+    local numPlayers = player.GetCount()
+    numTiles = numPlayers * STARTING_TILES_PER_PLAYER
+    local maxWidth = numTiles / MIN_WIDTH_OR_HEIGHT
+
+    mapSize.width = math.random(MIN_WIDTH_OR_HEIGHT, maxWidth)
+    mapSize.height = math.Round(numTiles / mapSize.width)
+end
+
+local function CalculateMinimumCorner()
+    mins.x = mapMiddle.x - (mapSize.width * mapTileSize.x) / 2 
+    mins.y = mapMiddle.y - (mapSize.height * mapTileSize.y) / 2
 end
 
 local function GenerateMapSpawns()
@@ -22,8 +41,8 @@ local function GenerateMapSpawns()
         local y = 0
         local spawnExists = true
         while(spawnExists) do
-            x = math.random(0, mapDimensionsInTiles.x - 1)
-            y = math.random(0, mapDimensionsInTiles.y - 1)
+            x = math.random(0, mapSize.width - 1)
+            y = math.random(0, mapSize.height - 1)
 
             spawnExists = usedSpawns[x] and usedSpawns[x][y]
         end
@@ -37,14 +56,17 @@ function GenerateMap()
     mapGenerated = true
     mapTiles = {}
 
+    CalculateMapSize()
+    CalculateMinimumCorner()
+
     local pos = mapMiddle
     pos.x = mins.x
 
-    for i=0, mapDimensionsInTiles.x - 1, 1 do
+    for i=0, mapSize.width - 1, 1 do
         mapTiles[i] = {}
         pos.y = mins.y
 
-        for j=0, mapDimensionsInTiles.y - 1, 1 do
+        for j=0, mapSize.height - 1, 1 do
             local plate = ents.Create("map_tile_floor")
             if(IsValid(plate)) then
                 mapTiles[i][j] = plate
@@ -57,7 +79,7 @@ function GenerateMap()
                     plate.BottomNeighbour = mapTiles[i - 1][j]
                     plate.BottomNeighbour.TopNeighbour = plate
 
-                    if(i == mapDimensionsInTiles.x - 1) then
+                    if(i == mapSize.width - 1) then
                         plate:AddTopWall()
                     end
                 end
@@ -68,7 +90,7 @@ function GenerateMap()
                     plate.RightNeighbour = mapTiles[i][j - 1]
                     plate.RightNeighbour.LeftNeighbour = plate
 
-                    if(j == mapDimensionsInTiles.y - 1) then
+                    if(j == mapSize.height - 1) then
                         plate:AddLeftWall()
                     end
                 end

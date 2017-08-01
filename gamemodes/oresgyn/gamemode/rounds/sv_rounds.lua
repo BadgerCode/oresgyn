@@ -4,6 +4,8 @@ util.AddNetworkString(NET_ROUND_WINNER)
 
 local roundStatus = ROUND_WAIT
 
+local minTilesForOwnershipVictory = 0
+
 function roundWaitForPlayers()
     setRoundStatus(ROUND_WAIT)
 
@@ -37,6 +39,8 @@ function beginRound()
     setRoundStatus(ROUND_ACTIVE)
 
     GenerateMap()
+    minTilesForOwnershipVictory = GetNumTotalTiles() * MIN_PCT_TILES_FOR_OWNERSHIP_VICTORY
+
     assignPlayersColours()
 
     for k, ply in pairs(player.GetAll()) do
@@ -115,5 +119,11 @@ function checkForVictory()
         end
 
         endRound(winner)
+    end
+end
+
+function CheckForTileOwnershipVictory(ply)
+    if(ply:GetNumTiles() >= minTilesForOwnershipVictory) then
+        endRound(ply)
     end
 end

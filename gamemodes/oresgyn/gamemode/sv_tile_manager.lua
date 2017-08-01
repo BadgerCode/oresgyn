@@ -1,8 +1,8 @@
 local function DoesPlayerOwnANeighbouringTile(ply, tile)
-    return tile.TopNeighbour.OwnerPlayer == ply
-        or tile.LeftNeighbour.OwnerPlayer == ply
-        or tile.RightNeighbour.OwnerPlayer == ply
-        or tile.BottomNeighbour.OwnerPlayer == ply
+    return IsValid(tile.TopNeighbour) and tile.TopNeighbour.OwnerPlayer == ply
+        or IsValid(tile.LeftNeighbour) and tile.LeftNeighbour.OwnerPlayer == ply
+        or IsValid(tile.RightNeighbour) and tile.RightNeighbour.OwnerPlayer == ply
+        or IsValid(tile.BottomNeighbour) and tile.BottomNeighbour.OwnerPlayer == ply
 end
 
 function GM:PlayerTouchedTile(ply, tile)

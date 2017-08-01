@@ -7,6 +7,7 @@ end
 
 function plymeta:AddTile()
     self.NumTiles = self.NumTiles + 1
+    CheckForTileOwnershipVictory(self)
 end
 
 function plymeta:RemoveTile()
