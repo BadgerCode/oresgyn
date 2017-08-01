@@ -1,3 +1,10 @@
+local function DoesPlayerOwnANeighbouringTile(ply, tile)
+    return tile.TopNeighbour.OwnerPlayer == ply
+        or tile.LeftNeighbour.OwnerPlayer == ply
+        or tile.RightNeighbour.OwnerPlayer == ply
+        or tile.BottomNeighbour.OwnerPlayer == ply
+end
+
 function GM:PlayerTouchedTile(ply, tile)
     local plyPreviousTile = ply:GetActiveTile()
     if IsValid(plyPreviousTile) and plyPreviousTile.OwnerPlayer == ply then
@@ -10,7 +17,7 @@ function GM:PlayerTouchedTile(ply, tile)
 
     if(currentOwner == ply) then
         tile:AddProtectionFromPlayer()
-    elseif(!tile:IsProtected()) then
+    elseif(!tile:IsProtected() and DoesPlayerOwnANeighbouringTile(ply, tile)) then
         tile.OwnerPlayer = ply
         tile:SetColor(tile.OwnerPlayer.tileColour)
         tile.OwnerPlayer:AddTile()
