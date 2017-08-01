@@ -20,6 +20,29 @@ function GM:Initialize()
     roundWaitForPlayers()
 end
 
+function GM:PlayerInitialSpawn(ply)
+    ply:SetSpectator()
+end
+
+function GM:PlayerSpawn(ply)
+    if ply:IsSpectator() then
+        ply:Spectate(OBS_MODE_ROAMING)
+
+        ply:SetEyeAngles(Angle(90, 0, 0))
+
+        if(IsValid(ply.SpectatorPos)) then
+            ply:SetPos(ply.SpectatorPos)
+        end
+    else
+        ply:SetJumpPower(0)
+        ply:SetPos(ply.SpawnTile:GetPos() + Vector(0, 0, 10))
+        ply:ResetMoveSpeed()
+    end
+
+    hook.Call( "PlayerLoadout", GAMEMODE, ply )
+    hook.Call( "PlayerSetModel", GAMEMODE, ply )
+end
+
 function GM:PlayerDisconnected(ply)
     checkForVictory()
 
