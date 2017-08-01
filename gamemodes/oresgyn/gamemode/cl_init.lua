@@ -7,6 +7,11 @@ include("rounds/cl_rounds.lua")
 include("economy/cl_economy.lua")
 include("cl_hud.lua")
 
+function GM:InitPostEntity()
+    net.Start(NET_PLAYER_JOIN)
+    net.SendToServer()
+end
+
 function GM:CalcView(ply, origin, angles, fox, znear, zfar)
     if(!ply:IsSpectator()) then
         local view = { }
@@ -17,8 +22,4 @@ function GM:CalcView(ply, origin, angles, fox, znear, zfar)
         view.drawviewer = true
         return view
     end
-end
-
-function GM:OnPlayerChat(ply, text, teamChat, isDead)
-
 end

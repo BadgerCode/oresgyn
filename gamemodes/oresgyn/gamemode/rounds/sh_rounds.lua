@@ -5,6 +5,7 @@ ROUND_PREPARE   = 2
 ROUND_ACTIVE    = 3
 ROUND_OVER      = 4
 
+NET_PLAYER_JOIN             = "PlayerJoin"
 NET_ROUND_STATUS_ON_JOIN    = "RoundStatusOnJoin"
 NET_ROUND_STATUS_UPDATE     = "UpdateRoundStatus"
 NET_ROUND_WINNER            = "RoundWinner"

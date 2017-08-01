@@ -1,3 +1,4 @@
+util.AddNetworkString(NET_PLAYER_JOIN)
 util.AddNetworkString(NET_ROUND_STATUS_ON_JOIN)
 util.AddNetworkString(NET_ROUND_STATUS_UPDATE)
 util.AddNetworkString(NET_ROUND_WINNER)
@@ -75,6 +76,10 @@ function endRound(winner)
         restartRound()
     end)
 end
+
+net.Receive(NET_PLAYER_JOIN, function(len, ply)
+    sendPlayerCurrentRoundStatus(ply)
+end)
 
 function sendPlayerCurrentRoundStatus(ply)
     net.Start(NET_ROUND_STATUS_ON_JOIN)

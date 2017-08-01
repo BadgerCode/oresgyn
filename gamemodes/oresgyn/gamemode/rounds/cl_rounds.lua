@@ -24,6 +24,7 @@ net.Receive(NET_ROUND_STATUS_UPDATE, function(len)
 end)
 
 net.Receive(NET_ROUND_STATUS_ON_JOIN, function(len)
+    if(roundStatus != ROUND_WAIT) then return end
     roundStatus = net.ReadInt(4)
 
     LocalPlayer():ChatPrint(roundStatusJoinMessage[roundStatus])
