@@ -25,7 +25,7 @@ function GM:PlayerSpawn(ply)
             ply:SetEyeTarget(ply.SpectatorTargetPos)
         end
     else
-        ply:SetPos(ply.SpawnPos)
+        ply:SetPos(ply.SpawnTile:GetPos() + Vector(0, 0, 10))
     end
 
     hook.Call( "PlayerLoadout", GAMEMODE, ply )

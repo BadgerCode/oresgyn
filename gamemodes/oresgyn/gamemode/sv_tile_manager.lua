@@ -18,8 +18,7 @@ function GM:PlayerTouchedTile(ply, tile)
     if(currentOwner == ply) then
         tile:AddProtectionFromPlayer()
     elseif(!tile:IsProtected() and DoesPlayerOwnANeighbouringTile(ply, tile)) then
-        tile.OwnerPlayer = ply
-        tile:SetColor(tile.OwnerPlayer.tileColour)
+        tile:SetOwnerPlayer(ply)
         tile.OwnerPlayer:AddTile()
         tile:AddProtectionFromPlayer()
         tile:CheckProtectionFromNeighbourTowers()

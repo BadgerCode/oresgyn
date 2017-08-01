@@ -19,7 +19,7 @@ end
 function restartRound()
     setRoundStatus(ROUND_PREPARE)
 
-    destroyMap()
+    DestroyMap()
 
     for k, ply in pairs(player.GetAll()) do
         if(!ply:IsSpectator()) then
@@ -36,13 +36,17 @@ end
 function beginRound()
     setRoundStatus(ROUND_ACTIVE)
 
-    generateMap()
+    GenerateMap()
     assignPlayersColours()
 
     for k, ply in pairs(player.GetAll()) do
         ply:SpawnForRound()
         ply:ResetScore()
         ply:ResetOwnedTowers()
+
+        ply.SpawnTile:SetOwnerPlayer(ply)
+        ply.SpawnTile:AddProtectionFromPlayer()
+        ply:AddTile()
     end
 
     StartEconomy()

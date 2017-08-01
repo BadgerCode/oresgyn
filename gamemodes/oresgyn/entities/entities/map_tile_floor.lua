@@ -61,6 +61,11 @@ function ENT:SetupDataTables()
 end
 
 if SERVER then
+    function ENT:SetOwnerPlayer(ply)
+        self.OwnerPlayer = ply
+        self:SetColor(ply.tileColour)
+    end
+
     function ENT:StartTouch(entity)
         if(!entity:IsPlayer()) then return end
 

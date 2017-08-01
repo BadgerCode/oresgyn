@@ -10,7 +10,29 @@ local mapGenerated = false
 
 local mapTiles = {}
 
-function generateMap()
+local function CalculateMapSize()
+
+end
+
+local function GenerateMapSpawns()
+    local usedSpawns = { }
+
+    for k, ply in pairs(player.GetAll()) do
+        local x = 0
+        local y = 0
+        local spawnExists = true
+        while(spawnExists) do
+            x = math.random(0, mapDimensionsInTiles.x - 1)
+            y = math.random(0, mapDimensionsInTiles.y - 1)
+
+            spawnExists = usedSpawns[x] and usedSpawns[x][y]
+        end
+
+        ply.SpawnTile = mapTiles[x][y]
+    end
+end
+
+function GenerateMap()
     if(mapGenerated) then return end
     mapGenerated = true
     mapTiles = {}
@@ -58,30 +80,12 @@ function generateMap()
         pos.x = pos.x + mapTileSize.x
     end
 
-    generateMapSpawns()
+    GenerateMapSpawns()
 
     print("Map generated")
 end
 
-function generateMapSpawns()
-    local usedSpawns = { }
-
-    for k, ply in pairs(player.GetAll()) do
-        local x = 0
-        local y = 0
-        local spawnExists = true
-        while(spawnExists) do
-            x = math.random(0, mapDimensionsInTiles.x - 1)
-            y = math.random(0, mapDimensionsInTiles.y - 1)
-
-            spawnExists = usedSpawns[x] and usedSpawns[x][y]
-        end
-
-        ply.SpawnPos = Vector(mins.x + x * mapTileSize.x, mins.y + y * mapTileSize.y, mapMiddle.z + 10)
-    end
-end
-
-function destroyMap()
+function DestroyMap()
     if(!mapGenerated) then return end
     mapGenerated = false
 
@@ -94,8 +98,4 @@ function destroyMap()
     table.Empty(mapTiles)
 
     print("Map destroyed")
-end
-
-function getMapTileSize()
-    return mapTileSize
 end
