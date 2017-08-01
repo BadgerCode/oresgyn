@@ -25,7 +25,7 @@ function StartEconomy()
     end
 
     timer.Create(TIMER_ECONOMY, TIME_BETWEEN_ECONOMY_TICKS, 0, function()
-        for k, ply in pairs(player.GetAll()) do
+        for k, ply in pairs(team.GetPlayers(TEAM_ALIVE)) do
             local income = CalculateIncome(ply)
             ply:AddMoney(income)
 
