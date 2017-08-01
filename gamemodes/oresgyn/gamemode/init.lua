@@ -1,7 +1,7 @@
-AddCSLuaFile("cl_init.lua")
-AddCSLuaFile("rounds/cl_rounds.lua")
-AddCSLuaFile("economy/cl_economy.lua")
 AddCSLuaFile("cl_hud.lua")
+AddCSLuaFile("cl_init.lua")
+AddCSLuaFile("economy/cl_economy.lua")
+AddCSLuaFile("rounds/cl_rounds.lua")
 
 include("shared.lua")
 include("sh_player.lua")
