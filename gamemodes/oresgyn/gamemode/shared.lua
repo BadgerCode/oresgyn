@@ -21,8 +21,11 @@ end
 function GM:PlayerSpawn(ply)
     if ply:IsSpectator() then
         ply:Spectate(OBS_MODE_ROAMING)
-        if(IsValid(ply.SpectatorTargetPos)) then
-            ply:SetEyeTarget(ply.SpectatorTargetPos)
+
+        ply:SetEyeAngles(Angle(90, 0, 0))
+
+        if(IsValid(ply.SpectatorPos)) then
+            ply:SetPos(ply.SpectatorPos)
         end
     else
         ply:SetPos(ply.SpawnTile:GetPos() + Vector(0, 0, 10))

@@ -28,6 +28,7 @@ local function GetTargettedTile(ply)
 end
 
 function GM:PlayerAttacked(ply)
+    if(!isRoundActive()) then return end
     local targetTile = GetTargettedTile(ply)
 
     if targetTile == nil or !targetTile:HasTower() then return end

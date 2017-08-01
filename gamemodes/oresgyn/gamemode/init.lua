@@ -95,10 +95,6 @@ function GM:SetupMove(ply, moveData, command)
     end
 end
 
-function GM:PlayerSay(ply, text, isTeamChat)
-    if(text == "pos") then
-        ply:ChatPrint(tostring(ply:GetPos()))
-    end
+function GM:PlayerSpawnAsSpectator(ply)
 
-    return text
 end

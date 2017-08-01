@@ -21,12 +21,7 @@ end
 function restartRound()
     setRoundStatus(ROUND_PREPARE)
 
-    DestroyMap()
-
-    for k, ply in pairs(player.GetAll()) do
-        if(!ply:IsSpectator()) then
-            ply:SetSpectator()
-        end
+    for k, ply in pairs(team.GetPlayers(TEAM_ALIVE)) do
         ply:ResetScore()
     end
 
@@ -38,6 +33,14 @@ end
 function beginRound()
     setRoundStatus(ROUND_ACTIVE)
 
+    for k, ply in pairs(team.GetPlayers(TEAM_ALIVE)) do
+        if(!ply:IsSpectator()) then
+            ply:SetSpectator()
+            ply:Spawn()
+        end
+    end
+
+    DestroyMap()
     GenerateMap()
     minTilesForOwnershipVictory = GetNumTotalTiles() * MIN_PCT_TILES_FOR_OWNERSHIP_VICTORY
 
@@ -68,11 +71,6 @@ function endRound(winner)
 
     EndEconomy()
 
-    for k, ply in pairs(team.GetPlayers(TEAM_ALIVE)) do
-        ply:SetSpectator()
-        ply:Spawn()
-    end
-
     timer.Simple(END_TIME, function()
         restartRound()
     end)
@@ -97,7 +95,7 @@ function getRoundStatus()
 end
 
 function isRoundActive()
-    return getRoundStatus == ROUND_ACTIVE
+    return getRoundStatus() == ROUND_ACTIVE
 end
 
 function setRoundWinner(ply)
