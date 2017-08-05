@@ -1,0 +1,11 @@
+{
+	"title"		:	"Oresgyn",
+	"type"		:	"gamemode",
+	"tags"		:	[ "fun", "build" ],
+	"ignore"	:
+	[
+		".git/*",
+		"README.md",
+		"oresgyn.jpg"
+	]
+}
