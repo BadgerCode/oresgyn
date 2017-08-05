@@ -78,9 +78,13 @@ function endRound(winner)
 
     EndEconomy()
 
-    timer.Simple(END_TIME, function()
-        restartRound()
-    end)
+    if player.GetCount() == 0 then
+        roundWaitForPlayers()
+    else
+        timer.Simple(END_TIME, function()
+            restartRound()
+        end)
+    end
 end
 
 net.Receive(NET_PLAYER_JOIN, function(len, ply)
