@@ -3,11 +3,15 @@ util.AddNetworkString(NET_ROUND_STATUS_ON_JOIN)
 util.AddNetworkString(NET_ROUND_STATUS_UPDATE)
 util.AddNetworkString(NET_ROUND_WINNER)
 
+TIMER_WAIT_PLAYERS          = "WaitForPlayers"
+TIMER_ROUND_TIME            = "RoundTimer"
+
 local roundStatus = ROUND_WAIT
 
 local minTilesForOwnershipVictory = 0
 
 function roundWaitForPlayers()
+    print("Waiting for players to join")
     setRoundStatus(ROUND_WAIT)
 
     timer.Create(TIMER_WAIT_PLAYERS, 2, 0, function()
@@ -20,18 +24,24 @@ function roundWaitForPlayers()
 end
 
 function restartRound()
+    print("Restarting the round")
     setRoundStatus(ROUND_PREPARE)
 
     for k, ply in pairs(team.GetPlayers(TEAM_ALIVE)) do
         ply:ResetScore()
     end
 
-    timer.Simple(PREP_TIME, function()
-        beginRound()
-    end)
+    if player.GetCount() == 0 then
+        roundWaitForPlayers()
+    else
+        timer.Simple(PREP_TIME, function()
+            beginRound()
+        end)
+    end
 end
 
 function beginRound()
+    print("Starting the round")
     setRoundStatus(ROUND_ACTIVE)
 
     for k, ply in pairs(team.GetPlayers(TEAM_ALIVE)) do
@@ -59,13 +69,20 @@ function beginRound()
 
     StartEconomy()
 
-    timer.Simple(ROUND_TIME, function()
+    timer.Create(TIMER_ROUND_TIME, ROUND_TIME, 0, function()
         checkForVictory()
         if isRoundActive() then endRound(nil) end
     end)
+
+    print("Round has begun")
 end
 
 function endRound(winner)
+    print("Ending the round. " .. (IsValid(winner) and winner:GetName() or "Nobody") .. " won")
+
+    if timer.Exists(TIMER_ROUND_TIME) then
+        timer.Destroy(TIMER_ROUND_TIME)
+    end
     if roundStatus == ROUND_OVER then return end
     setRoundStatus(ROUND_OVER)
     setRoundWinner(winner)
@@ -75,6 +92,8 @@ function endRound(winner)
     timer.Simple(END_TIME, function()
         restartRound()
     end)
+
+    print("Round has ended")
 end
 
 net.Receive(NET_PLAYER_JOIN, function(len, ply)

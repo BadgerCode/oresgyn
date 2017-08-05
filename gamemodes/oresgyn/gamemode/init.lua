@@ -43,7 +43,12 @@ function GM:PlayerSpawn(ply)
     hook.Call( "PlayerSetModel", GAMEMODE, ply )
 end
 
+function GM:PlayerConnected(name, ip)
+    print(name .. " connected.")
+end
+
 function GM:PlayerDisconnected(ply)
+    print(ply:GetName() .. " disconnected.")
     checkForVictory()
 
     if(!ply:IsSpectator()) then
@@ -56,6 +61,7 @@ end
 
 function GM:PlayerDeath(ply, weapon, killer)
     if(!ply:IsSpectator()) then
+        print(ply:GetName() .. " died.")
         ply:SetSpectator()
 
         local activeTile = ply:GetActiveTile()
