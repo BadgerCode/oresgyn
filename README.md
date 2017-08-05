@@ -1,5 +1,6 @@
 # oresgyn (au-res-ghin)
-GMod Gamemode Competition 2017
+GMod Gamemode Competition 2017.<br>
+Get it on the [Workshop](http://steamcommunity.com/sharedfiles/filedetails/?id=1101649274)
 
 ![Oresgyn Screenshot](http://i.imgur.com/drZyZ90.png)
 
