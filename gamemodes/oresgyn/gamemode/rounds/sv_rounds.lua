@@ -78,7 +78,7 @@ function beginRound()
 end
 
 function endRound(winner)
-    print("Ending the round")
+    print("Ending the round. " .. (IsValid(winner) and winner:GetName() or "Nobody") .. " won")
 
     if timer.Exists(TIMER_ROUND_TIME) then
         timer.Destroy(TIMER_ROUND_TIME)
