@@ -5,7 +5,11 @@ local plymeta = FindMetaTable( "Player" )
 if not plymeta then Error("FAILED TO FIND PLAYER TABLE") return end
 
 function plymeta:Lose()
-    self:ChatPrint("You lost.")
+
+    for k, ply in pairs(player.GetAll()) do
+        ply:ChatPrint(self:GetName() .. " has lost!")
+    end
+
     local activeTile = self:GetActiveTile()
     if IsValid(activeTile) and activeTile.OwnerPlayer == self then
         activeTile:RemoveProtectionFromPlayer()
