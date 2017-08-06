@@ -20,7 +20,11 @@ net.Receive(NET_ROUND_STATUS_UPDATE, function(len)
         LocalPlayer():ChatPrint("Press SPACE to buy towers and USE (E) to buy speed upgrades.")
     end
 
-    LocalPlayer():ChatPrint(roundStatusMessage[roundStatus])
+    local roundMessage = roundStatusMessage[roundStatus]
+
+    if(roundMessage == nil) then return end -- Lazy fix
+
+    LocalPlayer():ChatPrint(roundMessage)
 end)
 
 net.Receive(NET_ROUND_STATUS_ON_JOIN, function(len)
