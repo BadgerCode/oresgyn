@@ -26,6 +26,8 @@ local function CalculateMapSize()
 
     mapSize.width = math.random(MIN_WIDTH_OR_HEIGHT, maxWidth)
     mapSize.height = math.Round(numTiles / mapSize.width)
+
+    numTiles = mapSize.width * mapSize.height
 end
 
 local function CalculateMinimumCorner()

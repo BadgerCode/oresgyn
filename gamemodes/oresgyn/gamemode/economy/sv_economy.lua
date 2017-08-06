@@ -31,7 +31,12 @@ function StartEconomy()
 
             if(ply:GetMoney() < 0) then
                 ply:ResetMoney()
-                ply:DestroyLastTower()
+
+                if(ply:GetNumOwnedTowers() < 1) then
+                    ply:Lose()
+                else
+                    ply:DestroyLastTower()
+                end
             end
 
             SendPlayerFinanceUpdate(ply, income)

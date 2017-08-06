@@ -1,11 +1,9 @@
-# oresgyn (au-res-ghin)
-GMod Gamemode Competition 2017.<br>
-Get it on the [Workshop](http://steamcommunity.com/sharedfiles/filedetails/?id=1101649274)
+![Oresgyn](/gamemodes/oresgyn/logo.png?raw=true)
+----
+# Oresgyn (au-res-ghin)
 
-![Oresgyn Screenshot](http://i.imgur.com/drZyZ90.png)
-
-Due to other time commitments, I only managed to work on this in the evenings for about a week.<br>
-Pls be kind.
+Entree in the Garry's Mod Gamemode Competition 2017.<br>
+[Get it on the Steam Workshop](http://steamcommunity.com/sharedfiles/filedetails/?id=1101649274).
 
 ## Overview
 This is a real-time strategy game where players must fight to take control of the map.<br>
@@ -20,3 +18,13 @@ Tiles will contribute money to your economy but upgrades will drain it.
 Rounds will last for 3 minutes max.
 
 This should be played on **gm_flatgrass**.
+
+## Garry's Mod 2017 Gamemode Competition
+[Original post](https://facepunch.com/showthread.php?t=1566029).<br>
+The competition lasted for around 7 weeks. Due to other time commitments, I was only able to work on this for 1 week and only in the evenings.
+
+The gamemode came 12th out of 19 gamemodes.
+
+## Screenshots
+![Oresgyn Screenshot](http://i.imgur.com/drZyZ90.png)
+![Oresgyn Screenshot](http://i.imgur.com/ewRxVVQ.jpg)
