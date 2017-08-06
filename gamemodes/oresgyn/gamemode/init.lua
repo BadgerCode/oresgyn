@@ -21,7 +21,7 @@ function GM:Initialize()
 end
 
 function GM:PlayerInitialSpawn(ply)
-    ply:SetSpectator()
+    ply:SetSpectator(true)
 end
 
 function GM:PlayerSpawn(ply)
@@ -30,7 +30,7 @@ function GM:PlayerSpawn(ply)
 
         ply:SetEyeAngles(Angle(90, 0, 0))
 
-        if(IsValid(ply.SpectatorPos)) then
+        if(ply.SpectatorPos ~= nil) then
             ply:SetPos(ply.SpectatorPos)
         end
     else
@@ -66,7 +66,6 @@ end
 function GM:PostPlayerDeath(ply)
     if(ply:IsSpectator()) then
         ply:Spawn()
-        ply:SetPos(ply.SpectatorPos)
     end
 end
 
