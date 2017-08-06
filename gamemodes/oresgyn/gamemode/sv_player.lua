@@ -4,6 +4,19 @@ local MOVE_SPEED_LEVEL_MODIFIER = 50
 local plymeta = FindMetaTable( "Player" )
 if not plymeta then Error("FAILED TO FIND PLAYER TABLE") return end
 
+function plymeta:Lose()
+    self:ChatPrint("You lost.")
+    local activeTile = self:GetActiveTile()
+    if IsValid(activeTile) and activeTile.OwnerPlayer == self then
+        activeTile:RemoveProtectionFromPlayer()
+    end
+
+    self:SetSpectator()
+    self:Spawn()
+
+    checkForVictory()
+end
+
 function plymeta:ResetScore()
     self.NumTiles = 0
 end
@@ -15,6 +28,9 @@ end
 
 function plymeta:RemoveTile()
     self.NumTiles = self.NumTiles - 1
+    if(self.NumTiles < 1) then
+        self:Lose()
+    end
 end
 
 function plymeta:GetNumTiles()
