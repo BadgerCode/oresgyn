@@ -106,24 +106,5 @@ function GM:KeyPress(ply, key)
         ply:BuyMoveSpeed()
     elseif key == IN_JUMP then
         hook.Run("PlayerPurchaseTower", ply)
---[[    elseif key == IN_FORWARD then
-        ply:SetEyeAngles(Angle(0, 0, 0))
-    elseif key == IN_BACK then
-        ply:SetEyeAngles(Angle(0, 180, 0))
-    elseif key == IN_MOVELEFT then
-        ply:SetEyeAngles(Angle(0, 90, 0))
-    elseif key == IN_MOVERIGHT then
-        ply:SetEyeAngles(Angle(0, 270, 0))--]]
     end
-    ply:SetEyeAngles(Angle(0, 0, 0))
-end
-
-function GM:Move(ply, moveData, command)
-    if(!ply:IsSpectator()) then
-        moveData:SetMoveAngles(Angle(0, 0, 0))
-    end
-end
-
-function GM:PlayerSpawnAsSpectator(ply)
-
 end
