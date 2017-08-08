@@ -51,4 +51,6 @@ function GM:HUDPaint()
         color = Color(220, 220, 220),
         font = "DermaLarge"
     })
+
+    hook.Run("DrawNotifications")
 end

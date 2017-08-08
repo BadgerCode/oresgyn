@@ -6,6 +6,7 @@ include("economy/sh_economy.lua")
 include("rounds/cl_rounds.lua")
 include("economy/cl_economy.lua")
 include("cl_hud.lua")
+include("cl_notifications.lua")
 
 function GM:InitPostEntity()
     net.Start(NET_PLAYER_JOIN)
