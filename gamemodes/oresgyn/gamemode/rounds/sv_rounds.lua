@@ -2,6 +2,7 @@ util.AddNetworkString(NET_PLAYER_JOIN)
 util.AddNetworkString(NET_ROUND_STATUS_ON_JOIN)
 util.AddNetworkString(NET_ROUND_STATUS_UPDATE)
 util.AddNetworkString(NET_ROUND_WINNER)
+util.AddNetworkString(NET_ROUND_PLAYER_LOSE)
 
 TIMER_WAIT_PLAYERS          = "WaitForPlayers"
 TIMER_ROUND_TIME            = "RoundTimer"
@@ -148,4 +149,10 @@ function CheckForTileOwnershipVictory(ply)
     if(ply:GetNumTiles() >= minTilesForOwnershipVictory) then
         endRound(ply)
     end
+end
+
+function AnnouncePlayerLost(ply)
+    net.Start(NET_ROUND_PLAYER_LOSE)
+        net.WriteEntity(ply)
+    net.Broadcast()
 end

@@ -11,7 +11,7 @@ local function UpdateRoundStatus(newStatus)
     if(currentRoundStatus == newStatus) then return end
 
     currentRoundStatus = newStatus
-    
+
     local ply = LocalPlayer()
 
     if(newStatus == ROUND_ACTIVE or newStatus == ROUND_OVER) then
@@ -49,4 +49,18 @@ net.Receive(NET_ROUND_WINNER, function(len)
     roundWinnerName = net.ReadString()
 
     LocalPlayer():ChatPrint(roundWinnerName .. " won the round!")
+end)
+
+net.Receive(NET_ROUND_PLAYER_LOSE, function(len)
+    local playerLost = net.ReadEntity()
+
+    if(!IsValid(playerLost)) then return end
+
+    if(playerLost == LocalPlayer()) then
+        LocalPlayer():ChatPrint("You lost!")
+    else
+        LocalPlayer():ChatPrint(playerLost:GetName() .. " has lost!")
+    end
+
+    surface.PlaySound("phx/eggcrack.wav")
 end)
