@@ -19,6 +19,10 @@ function plymeta:SetAlive()
     self:SetTeam(TEAM_ALIVE)
 end
 
+function plymeta:IsAlive()
+    return self:Team() == TEAM_ALIVE
+end
+
 function plymeta:IsSpectator()
     return self:Team() == TEAM_SPECTATOR
 end

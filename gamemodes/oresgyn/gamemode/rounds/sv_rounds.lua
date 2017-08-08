@@ -2,6 +2,7 @@ util.AddNetworkString(NET_PLAYER_JOIN)
 util.AddNetworkString(NET_ROUND_STATUS_ON_JOIN)
 util.AddNetworkString(NET_ROUND_STATUS_UPDATE)
 util.AddNetworkString(NET_ROUND_WINNER)
+util.AddNetworkString(NET_ROUND_PLAYER_LOSE)
 
 TIMER_WAIT_PLAYERS          = "WaitForPlayers"
 TIMER_ROUND_TIME            = "RoundTimer"
@@ -11,12 +12,12 @@ local roundStatus = ROUND_WAIT
 local minTilesForOwnershipVictory = 0
 
 function roundWaitForPlayers()
-    print("Waiting for players to join")
+    print("[ROUND] Waiting for players to join")
     setRoundStatus(ROUND_WAIT)
 
     timer.Create(TIMER_WAIT_PLAYERS, 2, 0, function()
         if(player.GetCount() > 0) then
-            print("Enough players have joined")
+            print("[ROUND] Enough players have joined.")
             restartRound()
             timer.Destroy(TIMER_WAIT_PLAYERS)
         end
@@ -24,7 +25,7 @@ function roundWaitForPlayers()
 end
 
 function restartRound()
-    print("Restarting the round")
+    print("[ROUND] Restarting the round")
     setRoundStatus(ROUND_PREPARE)
 
     for k, ply in pairs(team.GetPlayers(TEAM_ALIVE)) do
@@ -41,7 +42,7 @@ function restartRound()
 end
 
 function beginRound()
-    print("Starting the round")
+    print("[ROUND] Starting the round")
     setRoundStatus(ROUND_ACTIVE)
 
     for k, ply in pairs(team.GetPlayers(TEAM_ALIVE)) do
@@ -74,11 +75,11 @@ function beginRound()
         if isRoundActive() then endRound(nil) end
     end)
 
-    print("Round has begun")
+    print("[ROUND] Round has begun")
 end
 
 function endRound(winner)
-    print("Ending the round. " .. (IsValid(winner) and winner:GetName() or "Nobody") .. " won")
+    print("[ROUND] Ending the round. " .. (IsValid(winner) and winner:GetName() or "Nobody") .. " won")
 
     if timer.Exists(TIMER_ROUND_TIME) then
         timer.Destroy(TIMER_ROUND_TIME)
@@ -93,7 +94,7 @@ function endRound(winner)
         restartRound()
     end)
 
-    print("Round has ended")
+    print("[ROUND] Round has ended")
 end
 
 net.Receive(NET_PLAYER_JOIN, function(len, ply)
@@ -148,4 +149,10 @@ function CheckForTileOwnershipVictory(ply)
     if(ply:GetNumTiles() >= minTilesForOwnershipVictory) then
         endRound(ply)
     end
+end
+
+function AnnouncePlayerLost(ply)
+    net.Start(NET_ROUND_PLAYER_LOSE)
+        net.WriteEntity(ply)
+    net.Broadcast()
 end
