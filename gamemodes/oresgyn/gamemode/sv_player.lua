@@ -13,6 +13,8 @@ function plymeta:Lose()
     self:SetSpectator()
     self:Spawn()
 
+    print("[ROUND] " .. self:GetName() .. " lost.")
+
     AnnouncePlayerLost(self)
 
     checkForVictory()
