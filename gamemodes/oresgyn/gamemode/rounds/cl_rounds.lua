@@ -13,22 +13,17 @@ local deathChatColour = Color(255, 151, 151)
 local function UpdateRoundStatus(newStatus)
     if(currentRoundStatus == newStatus) then return end
 
-    currentRoundStatus = newStatus
-
     local ply = LocalPlayer()
+    local roundMessage = roundStatusMessage[newStatus]
+
+    if(roundMessage ~= nil) then
+        -- Lazy fix
+        chat.AddText(roundChatColour, roundMessage)
+    end
 
     if(newStatus == ROUND_ACTIVE or newStatus == ROUND_OVER) then
         surface.PlaySound("ui/achievement_earned.wav")
-
-        local roundMessage = roundStatusMessage[newStatus]
         hook.Run("DisplayNotification", roundMessage)
-        chat.AddText(roundChatColour, roundMessage)
-    else
-        local roundMessage = roundStatusMessage[newStatus]
-        if(roundMessage ~= nil) then
-            -- Lazy fix
-            chat.AddText(roundChatColour, roundMessage)
-        end
     end
 
     if(ply:IsAlive() and newStatus == ROUND_ACTIVE) then
@@ -39,6 +34,8 @@ local function UpdateRoundStatus(newStatus)
             ply:ChatPrint("The round has already started. You will be able to join the next round.")
         end
     end
+
+    currentRoundStatus = newStatus
 end
 
 
@@ -63,15 +60,12 @@ net.Receive(NET_ROUND_PLAYER_LOSE, function(len)
 
     if(!IsValid(playerLost)) then return end
 
-    if(playerLost == LocalPlayer()) then
-        local message = "You lost!"
-        hook.Run("DisplayNotification", message)
-        chat.AddText(deathChatColour, message)
-    else
-        local message = playerLost:GetName() .. " has lost!"
-        hook.Run("DisplayNotification", message)
-        chat.AddText(deathChatColour, message)
-    end
+    local message = playerLost == LocalPlayer() 
+                    and "You lost!"
+                    or playerLost:GetName() .. " has lost!"
+
+    hook.Run("DisplayNotification", message)
+    chat.AddText(deathChatColour, message)
 
     surface.PlaySound("phx/eggcrack.wav")
 end)
