@@ -1,37 +1,48 @@
-local roundStatus = ROUND_WAIT
+local currentRoundStatus = ROUND_WAIT
 
-local roundStatusMessage = { }
-roundStatusMessage[ROUND_WAIT] = "Waiting for players to join."
-roundStatusMessage[ROUND_PREPARE] = "A new round is about to begin."
-roundStatusMessage[ROUND_ACTIVE] = "The round has started!"
-roundStatusMessage[ROUND_OVER] = "The round is over."
+local roundStatusMessage = {
+    [ROUND_WAIT] = "Waiting for players to join.",
+    [ROUND_PREPARE] = "A new round is about to begin.",
+    [ROUND_OVER] = "The round is over.",
+    [ROUND_ACTIVE] = "The round has started!"
+}
 
-local roundStatusJoinMessage = { }
-roundStatusJoinMessage[ROUND_WAIT] = roundStatusMessage[ROUND_WAIT]
-roundStatusJoinMessage[ROUND_PREPARE] = roundStatusMessage[ROUND_PREPARE]
-roundStatusJoinMessage[ROUND_ACTIVE] = "The round has already started. You will be able to join the next round."
-roundStatusJoinMessage[ROUND_OVER] = roundStatusMessage[ROUND_OVER]
+local function UpdateRoundStatus(newStatus)
+    if(currentRoundStatus == newStatus) then return end
 
-net.Receive(NET_ROUND_STATUS_UPDATE, function(len)
-    roundStatus = net.ReadInt(4)
+    currentRoundStatus = newStatus
+    
+    local ply = LocalPlayer()
 
-    if(roundStatus == ROUND_ACTIVE) then
-        ResetEconomy()
-        LocalPlayer():ChatPrint("Press SPACE to buy towers and USE (E) to buy speed upgrades.")
+    if(newStatus == ROUND_ACTIVE or newStatus == ROUND_OVER) then
+        surface.PlaySound("ui/achievement_earned.wav")
     end
 
-    local roundMessage = roundStatusMessage[roundStatus]
+    local roundMessage = roundStatusMessage[newStatus]
+    if(roundMessage ~= nil) then
+        -- Lazy fix
+        ply:ChatPrint(roundMessage)
+    end
 
-    if(roundMessage == nil) then return end -- Lazy fix
+    if(ply:IsAlive() and newStatus == ROUND_ACTIVE) then
+        if(ply:IsAlive()) then
+            ResetEconomy()
+            ply:ChatPrint("Press SPACE to buy towers and USE (E) to buy speed upgrades.")
+        else
+            ply:ChatPrint("The round has already started. You will be able to join the next round.")
+        end
+    end
+end
 
-    LocalPlayer():ChatPrint(roundMessage)
+
+net.Receive(NET_ROUND_STATUS_UPDATE, function(len)
+    UpdateRoundStatus(net.ReadInt(4))
 end)
 
 net.Receive(NET_ROUND_STATUS_ON_JOIN, function(len)
-    if(roundStatus != ROUND_WAIT) then return end
-    roundStatus = net.ReadInt(4)
+    if(currentRoundStatus != ROUND_WAIT) then return end
 
-    LocalPlayer():ChatPrint(roundStatusJoinMessage[roundStatus])
+    UpdateRoundStatus(net.ReadInt(4))
 end)
 
 net.Receive(NET_ROUND_WINNER, function(len)
