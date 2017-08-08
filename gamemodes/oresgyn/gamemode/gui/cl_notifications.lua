@@ -29,7 +29,3 @@ function GM:DrawNotifications()
         font = "DermaLarge"
     })
 end
-
-function GM:PostDrawHUD()
-    
-end
