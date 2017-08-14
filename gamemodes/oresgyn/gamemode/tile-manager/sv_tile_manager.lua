@@ -1,3 +1,6 @@
+util.AddNetworkString(NET_TILE_COUNT_UPDATE)
+util.AddNetworkString(NET_TOWER_COUNT_UPDATE)
+
 local function DoesPlayerOwnANeighbouringTile(ply, tile)
     return IsValid(tile.TopNeighbour) and tile.TopNeighbour.OwnerPlayer == ply
         or IsValid(tile.LeftNeighbour) and tile.LeftNeighbour.OwnerPlayer == ply
