@@ -2,11 +2,13 @@ include("shared.lua")
 include("sh_player.lua")
 include("rounds/sh_rounds.lua")
 include("economy/sh_economy.lua")
+include("tile-manager/sh_player_tiles.lua")
 
 include("rounds/cl_rounds.lua")
 include("economy/cl_economy.lua")
 include("gui/cl_hud.lua")
 include("gui/cl_notifications.lua")
+include("tile-manager/cl_player_tiles.lua")
 
 function GM:InitPostEntity()
     net.Start(NET_PLAYER_JOIN)
