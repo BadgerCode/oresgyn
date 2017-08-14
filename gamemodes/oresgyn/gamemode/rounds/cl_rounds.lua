@@ -10,6 +10,14 @@ local roundStatusMessage = {
 local roundChatColour = Color(151, 211, 255)
 local deathChatColour = Color(255, 151, 151)
 
+function getRoundStatus()
+    return roundStatus
+end
+
+function isRoundActive()
+    return getRoundStatus() == ROUND_ACTIVE
+end
+
 local function UpdateRoundStatus(newStatus)
     if(currentRoundStatus == newStatus) then return end
 

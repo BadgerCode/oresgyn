@@ -7,6 +7,7 @@ if not plymeta then Error("FAILED TO FIND PLAYER TABLE") return end
 local function SendTileCount(ply)
     net.Start(NET_TILE_COUNT_UPDATE)
         net.WriteInt(ply:GetNumTiles(), 32)
+        net.WriteInt(ply:GetNumTiles() / GetNumTotalTiles(), 32)
     net.Send(ply)
 end
 

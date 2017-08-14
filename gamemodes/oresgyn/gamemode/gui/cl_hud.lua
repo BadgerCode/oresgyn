@@ -68,7 +68,7 @@ local function DrawHUDCorner()
                     Color(20,20,20))
 
     draw.Text({
-        text = "Tiles: " .. tileCount,
+        text = "Tiles: " .. tileCount .. " (" .. ply:GetPctOfMapOwned() .. "%)",
         pos = { padding * 2, ScrH() - hudCorner.height },
         color = Color(220, 220, 220),
         font = "DermaLarge"
@@ -83,6 +83,8 @@ local function DrawHUDCorner()
 end
 
 function GM:HUDPaint()
+    -- TODO: Handle players who aren't in the round
+
     DrawHUDTopBar()
     DrawHUDCorner()
 
