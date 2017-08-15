@@ -10,12 +10,18 @@ local roundStatusMessage = {
 local roundChatColour = Color(151, 211, 255)
 local deathChatColour = Color(255, 151, 151)
 
+local roundEndTime = 0
+
 function getRoundStatus()
     return roundStatus
 end
 
 function isRoundActive()
     return getRoundStatus() == ROUND_ACTIVE
+end
+
+function getRoundRemainingSeconds()
+    return math.max(0, roundEndTime - CurTime())
 end
 
 local function UpdateRoundStatus(newStatus)
@@ -76,4 +82,8 @@ net.Receive(NET_ROUND_PLAYER_LOSE, function(len)
     chat.AddText(deathChatColour, message)
 
     surface.PlaySound("phx/eggcrack.wav")
+end)
+
+net.Receive(NET_ROUND_SEND_END_TIME, function(len)
+    roundEndTime = net.ReadDouble()
 end)

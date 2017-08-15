@@ -28,6 +28,7 @@ local function DrawHUDTopBar()
 
     local moneyMsg = "£" .. GetMoney()
     local incomeMsg = incomePrefix .. "£" .. math.abs(income)
+    local timeRemainingMsg = string.FormattedTime(getRoundRemainingSeconds(), "%02i:%02i")
 
     draw.RoundedBox(4, 
                     ScrW() / 2 - topBar.width / 2, padding, 
@@ -47,6 +48,14 @@ local function DrawHUDTopBar()
         pos = { ScrW() / 2 - 230, 20 },
         color = Color(220, 220, 220),
         font = "DermaLarge"
+    })
+
+    draw.Text({
+        text = timeRemainingMsg,
+        pos = { ScrW() / 2, 20 },
+        color = Color(220, 220, 220),
+        font = "DermaLarge",
+        xalign = TEXT_ALIGN_CENTER
     })
 
     draw.Text({

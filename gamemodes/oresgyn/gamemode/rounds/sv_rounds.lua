@@ -3,11 +3,13 @@ util.AddNetworkString(NET_ROUND_STATUS_ON_JOIN)
 util.AddNetworkString(NET_ROUND_STATUS_UPDATE)
 util.AddNetworkString(NET_ROUND_WINNER)
 util.AddNetworkString(NET_ROUND_PLAYER_LOSE)
+util.AddNetworkString(NET_ROUND_SEND_END_TIME)
 
 TIMER_WAIT_PLAYERS          = "WaitForPlayers"
 TIMER_ROUND_TIME            = "RoundTimer"
 
 local roundStatus = ROUND_WAIT
+local roundEndTime = 0
 
 local minTilesForOwnershipVictory = 0
 
@@ -70,12 +72,20 @@ function beginRound()
 
     StartEconomy()
 
-    timer.Create(TIMER_ROUND_TIME, ROUND_TIME, 0, function()
-        checkForVictory()
-        if isRoundActive() then endRound(nil) end
-    end)
+    roundEndTime = CurTime() + ROUND_TIME
+
+    net.Start(NET_ROUND_SEND_END_TIME)
+        net.WriteDouble(roundEndTime)
+    net.Broadcast()
 
     print("[ROUND] Round has begun")
+end
+
+function GM:CheckRoundTime()
+    if(isRoundActive() and CurTime() >= roundEndTime) then
+        checkForVictory()
+        if isRoundActive() then endRound(nil) end
+    end
 end
 
 function endRound(winner)

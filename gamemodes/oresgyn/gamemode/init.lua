@@ -102,3 +102,7 @@ function GM:KeyPress(ply, key)
         hook.Run("PlayerPurchaseTower", ply)
     end
 end
+
+function GM:Think()
+    hook.Run("CheckRoundTime")
+end

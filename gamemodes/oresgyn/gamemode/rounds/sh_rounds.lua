@@ -10,6 +10,7 @@ NET_ROUND_STATUS_ON_JOIN    = "RoundStatusOnJoin"
 NET_ROUND_STATUS_UPDATE     = "UpdateRoundStatus"
 NET_ROUND_WINNER            = "RoundWinner"
 NET_ROUND_PLAYER_LOSE       = "PlayerLose"
+NET_ROUND_SEND_END_TIME     = "RoundEndTime"
 
 PREP_TIME = 5
 END_TIME = 5
