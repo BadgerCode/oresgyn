@@ -11,6 +11,7 @@ include("gui/cl_notifications.lua")
 include("tile-manager/cl_player_tiles.lua")
 
 function GM:InitPostEntity()
+    LocalPlayer():ResetTiles()
     net.Start(NET_PLAYER_JOIN)
     net.SendToServer()
 end

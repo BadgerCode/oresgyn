@@ -5,9 +5,11 @@ local plymeta = FindMetaTable( "Player" )
 if not plymeta then Error("FAILED TO FIND PLAYER TABLE") return end
 
 local function SendTileCount(ply)
+    local pctMapOwned = math.Round((ply:GetNumTiles() / GetNumTotalTiles()) * 100)
+
     net.Start(NET_TILE_COUNT_UPDATE)
         net.WriteInt(ply:GetNumTiles(), 32)
-        net.WriteInt(ply:GetNumTiles() / GetNumTotalTiles(), 32)
+        net.WriteInt(pctMapOwned, 32)
     net.Send(ply)
 end
 

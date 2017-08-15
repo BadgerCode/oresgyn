@@ -23,8 +23,14 @@ function plymeta:GetPctOfMapOwned()
 	return self.pctMapOwned
 end
 
-function plymeta:SetPctOfMapOwned()
+function plymeta:SetPctOfMapOwned(pctMapOwned)
 	self.pctMapOwned = pctMapOwned
+end
+
+function plymeta:ResetTiles()
+	self.tileCount = 0
+	self.towerCount = 0
+	self.pctMapOwned = 0
 end
 
 net.Receive(NET_TILE_COUNT_UPDATE, function(len)
