@@ -1,5 +1,6 @@
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("economy/cl_economy.lua")
+AddCSLuaFile("gui/cl_disable_hud.lua")
 AddCSLuaFile("gui/cl_hud.lua")
 AddCSLuaFile("gui/cl_notifications.lua")
 AddCSLuaFile("rounds/cl_rounds.lua")

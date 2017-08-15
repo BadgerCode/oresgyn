@@ -6,6 +6,7 @@ include("tile-manager/sh_player_tiles.lua")
 
 include("rounds/cl_rounds.lua")
 include("economy/cl_economy.lua")
+include("gui/cl_disable_hud.lua")
 include("gui/cl_hud.lua")
 include("gui/cl_notifications.lua")
 include("tile-manager/cl_player_tiles.lua")
