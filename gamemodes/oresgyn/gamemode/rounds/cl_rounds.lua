@@ -40,7 +40,7 @@ local function UpdateRoundStatus(newStatus)
         hook.Run("DisplayNotification", roundMessage)
     end
 
-    if(ply:IsAlive() and newStatus == ROUND_ACTIVE) then
+    if(newStatus == ROUND_ACTIVE) then
         if(ply:IsAlive()) then
             ResetEconomy()
             ply:ChatPrint("Press SPACE to buy towers and USE (E) to buy speed upgrades.")
