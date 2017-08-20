@@ -24,47 +24,55 @@ function getRoundRemainingSeconds()
     return math.max(0, roundEndTime - CurTime())
 end
 
-local function UpdateRoundStatus(newStatus)
-    if(currentRoundStatus == newStatus) then return end
-
-    local ply = LocalPlayer()
-    local roundMessage = roundStatusMessage[newStatus]
-
-    if(roundMessage ~= nil) then
-        -- Lazy fix
-        chat.AddText(roundChatColour, roundMessage)
-    end
-
-    if(newStatus == ROUND_ACTIVE or newStatus == ROUND_OVER) then
-        surface.PlaySound("ui/achievement_earned.wav")
-        hook.Run("DisplayNotification", roundMessage)
-    end
-
-    if(newStatus == ROUND_ACTIVE) then
-        if(ply:IsAlive()) then
-            ResetEconomy()
-            ply:ChatPrint("Press SPACE to buy towers and USE (E) to buy speed upgrades.")
-        else
-            ply:ChatPrint("The round has already started. You will be able to join the next round.")
-        end
-    end
-
-    currentRoundStatus = newStatus
+local function PlayRoundSoundEffect()
+    surface.PlaySound("ui/achievement_earned.wav")
+    hook.Run("DisplayNotification", roundMessage)
 end
 
-
-net.Receive(NET_ROUND_STATUS_UPDATE, function(len)
-    UpdateRoundStatus(net.ReadInt(4))
-end)
-
 net.Receive(NET_ROUND_STATUS_ON_JOIN, function(len)
-    if(currentRoundStatus != ROUND_WAIT) then return end
+    currentRoundStatus = net.ReadInt(4)
 
-    UpdateRoundStatus(net.ReadInt(4))
+    if(currentRoundStatus == ROUND_ACTIVE) then
+        chat.AddText(roundChatColour, "The round has already started. You will be able to join the next round.")
+    else
+        chat.AddText(roundChatColour, roundStatusMessage[currentRoundStatus])
+    end
 end)
 
-net.Receive(NET_ROUND_WINNER, function(len)
+net.Receive(NET_ROUND_WAITING, function(len)
+    currentRoundStatus = ROUND_WAIT
+
+    chat.AddText(roundChatColour, roundStatusMessage[currentRoundStatus])
+end)
+
+net.Receive(NET_ROUND_PREPARING, function(len)
+    currentRoundStatus = ROUND_PREPARE
+
+    chat.AddText(roundChatColour, roundStatusMessage[currentRoundStatus])
+end)
+
+net.Receive(NET_ROUND_STARTED, function(len)
+    roundEndTime = net.ReadDouble()
+
+    currentRoundStatus = ROUND_ACTIVE
+
+    PlayRoundSoundEffect()
+
+    chat.AddText(roundChatColour, roundStatusMessage[currentRoundStatus])
+    chat.AddText("Press SPACE to buy towers and USE (E) to buy speed upgrades.")
+    hook.Run("DisplayNotification", "The round has started!")
+
+    ResetEconomy()
+end)
+
+net.Receive(NET_ROUND_OVER, function(len)
     roundWinnerName = net.ReadString()
+
+    currentRoundStatus = ROUND_OVER
+
+    PlayRoundSoundEffect()
+
+    chat.AddText(roundChatColour, roundStatusMessage[currentRoundStatus])
 
     hook.Run("DisplayNotification", roundWinnerName .. " won the round!")
 end)
@@ -82,8 +90,4 @@ net.Receive(NET_ROUND_PLAYER_LOSE, function(len)
     chat.AddText(deathChatColour, message)
 
     surface.PlaySound("phx/eggcrack.wav")
-end)
-
-net.Receive(NET_ROUND_SEND_END_TIME, function(len)
-    roundEndTime = net.ReadDouble()
 end)

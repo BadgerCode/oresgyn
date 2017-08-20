@@ -7,10 +7,11 @@ ROUND_OVER      = 4
 
 NET_PLAYER_JOIN             = "PlayerJoin"
 NET_ROUND_STATUS_ON_JOIN    = "RoundStatusOnJoin"
-NET_ROUND_STATUS_UPDATE     = "UpdateRoundStatus"
-NET_ROUND_WINNER            = "RoundWinner"
+NET_ROUND_WAITING           = "RoundWaiting"
+NET_ROUND_PREPARING         = "RoundPreparing"
+NET_ROUND_STARTED           = "RoundStarted"
+NET_ROUND_OVER              = "RoundOver"
 NET_ROUND_PLAYER_LOSE       = "PlayerLose"
-NET_ROUND_SEND_END_TIME     = "RoundEndTime"
 
 PREP_TIME = 5
 END_TIME = 5
