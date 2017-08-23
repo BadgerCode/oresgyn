@@ -16,53 +16,58 @@ local hudCorner = {
 
 local defaultBGColour = Color(100, 100, 150)
 
-local function DrawHUDTopBar()
+local function DrawHUDTopBar(shouldDrawFinances)
     local ply = LocalPlayer()
-    local income = GetIncome()
-    local incomePrefix = "+"
-    local incomeBgColour = defaultBGColour
-    if (income < 0) then 
-        incomePrefix = "-"
-        incomeBgColour = Color(150, 100, 100)
-    end
-
-    local moneyMsg = "£" .. GetMoney()
-    local incomeMsg = incomePrefix .. "£" .. math.abs(income)
-    local timeRemainingMsg = string.FormattedTime(getRoundRemainingSeconds(), "%02i:%02i")
 
     draw.RoundedBox(4, 
                     ScrW() / 2 - topBar.width / 2, padding, 
                     topBar.width, topBar.height, 
                     Color(20,20,20))
-    draw.RoundedBox(4, 
-                    ScrW() / 2 - topBar.width / 2 + padding, padding * 2, 
-                    financeBox.width, financeBox.height, 
-                    defaultBGColour)
-    draw.RoundedBox(4, 
+
+    if(shouldDrawFinances) then
+        local income = GetIncome()
+        local incomePrefix = "+"
+        local incomeBgColour = defaultBGColour
+        if (income < 0) then 
+            incomePrefix = "-"
+            incomeBgColour = Color(150, 100, 100)
+        end
+
+        draw.RoundedBox(4, 
                     ScrW() / 2 + financeBoxGapWidth / 2, padding * 2, 
                     financeBox.width, financeBox.height, 
                     incomeBgColour)
 
-    draw.Text({
-        text = moneyMsg,
-        pos = { ScrW() / 2 - 230, 20 },
-        color = Color(220, 220, 220),
-        font = "DermaLarge"
-    })
+        draw.RoundedBox(4, 
+                    ScrW() / 2 - topBar.width / 2 + padding, padding * 2, 
+                    financeBox.width, financeBox.height, 
+                    defaultBGColour)
 
+        local moneyMsg = "£" .. GetMoney()
+        local incomeMsg = incomePrefix .. "£" .. math.abs(income)
+
+        draw.Text({
+            text = moneyMsg,
+            pos = { ScrW() / 2 - 230, 20 },
+            color = Color(220, 220, 220),
+            font = "DermaLarge"
+        })
+
+        draw.Text({
+            text = incomeMsg,
+            pos = { ScrW() / 2 + 70, 20 },
+            color = Color(220, 220, 220),
+            font = "DermaLarge"
+        })
+    end
+
+    local timeRemainingMsg = string.FormattedTime(getRoundRemainingSeconds(), "%02i:%02i")
     draw.Text({
         text = timeRemainingMsg,
         pos = { ScrW() / 2, 20 },
         color = Color(220, 220, 220),
         font = "DermaLarge",
         xalign = TEXT_ALIGN_CENTER
-    })
-
-    draw.Text({
-        text = incomeMsg,
-        pos = { ScrW() / 2 + 70, 20 },
-        color = Color(220, 220, 220),
-        font = "DermaLarge"
     })
 end
 
@@ -92,10 +97,10 @@ local function DrawHUDCorner()
 end
 
 function GM:HUDPaint()
-    -- TODO: Handle players who aren't in the round
-
-    DrawHUDTopBar()
-    DrawHUDCorner()
-
+    local shouldDrawFinances = PlayerJoinedRound()
+    DrawHUDTopBar(shouldDrawFinances)
     hook.Run("DrawNotifications")
+
+    if(!PlayerJoinedRound()) then return end
+    DrawHUDCorner()
 end

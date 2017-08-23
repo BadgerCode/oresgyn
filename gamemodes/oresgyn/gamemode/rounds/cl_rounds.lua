@@ -11,6 +11,11 @@ local roundChatColour = Color(151, 211, 255)
 local deathChatColour = Color(255, 151, 151)
 
 local roundEndTime = 0
+local playerJoinedRound = false
+
+function PlayerJoinedRound()
+    return playerJoinedRound
+end
 
 function getRoundStatus()
     return roundStatus
@@ -34,6 +39,7 @@ net.Receive(NET_ROUND_STATUS_ON_JOIN, function(len)
 
     if(currentRoundStatus == ROUND_ACTIVE) then
         chat.AddText(roundChatColour, "The round has already started. You will be able to join the next round.")
+        playerJoinedRound = false
     else
         chat.AddText(roundChatColour, roundStatusMessage[currentRoundStatus])
     end
@@ -41,17 +47,20 @@ end)
 
 net.Receive(NET_ROUND_WAITING, function(len)
     currentRoundStatus = ROUND_WAIT
+    playerJoinedRound = false
 
     chat.AddText(roundChatColour, roundStatusMessage[currentRoundStatus])
 end)
 
 net.Receive(NET_ROUND_PREPARING, function(len)
     currentRoundStatus = ROUND_PREPARE
+    playerJoinedRound = false
 
     chat.AddText(roundChatColour, roundStatusMessage[currentRoundStatus])
 end)
 
 net.Receive(NET_ROUND_STARTED, function(len)
+    playerJoinedRound = true
     roundEndTime = net.ReadDouble()
 
     currentRoundStatus = ROUND_ACTIVE
