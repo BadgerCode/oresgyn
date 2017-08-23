@@ -1,21 +1,25 @@
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("economy/cl_economy.lua")
+AddCSLuaFile("gui/cl_disable_hud.lua")
 AddCSLuaFile("gui/cl_hud.lua")
 AddCSLuaFile("gui/cl_notifications.lua")
 AddCSLuaFile("rounds/cl_rounds.lua")
+AddCSLuaFile("tile-manager/cl_player_tiles.lua")
 
 include("shared.lua")
 include("sh_player.lua")
 include("rounds/sh_rounds.lua")
 include("economy/sh_economy.lua")
+include("tile-manager/sh_player_tiles.lua")
 
 include("sv_player.lua")
 include("sv_player_attack.lua")
 include("sv_player_colours.lua")
-include("sv_tile_manager.lua")
-include("rounds/sv_rounds.lua")
-include("map-generation/sv_mapgen.lua")
 include("economy/sv_economy.lua")
+include("map-generation/sv_mapgen.lua")
+include("rounds/sv_rounds.lua")
+include("tile-manager/sv_player_tiles.lua")
+include("tile-manager/sv_tile_manager.lua")
 
 function GM:Initialize()
     roundWaitForPlayers()
@@ -97,4 +101,8 @@ function GM:KeyPress(ply, key)
     elseif key == IN_JUMP then
         hook.Run("PlayerPurchaseTower", ply)
     end
+end
+
+function GM:Think()
+    hook.Run("CheckRoundTime")
 end

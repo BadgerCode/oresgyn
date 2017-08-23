@@ -1,19 +1,23 @@
 util.AddNetworkString(NET_PLAYER_JOIN)
 util.AddNetworkString(NET_ROUND_STATUS_ON_JOIN)
-util.AddNetworkString(NET_ROUND_STATUS_UPDATE)
-util.AddNetworkString(NET_ROUND_WINNER)
+util.AddNetworkString(NET_ROUND_WAITING)
+util.AddNetworkString(NET_ROUND_PREPARING)
+util.AddNetworkString(NET_ROUND_STARTED)
+util.AddNetworkString(NET_ROUND_OVER)
 util.AddNetworkString(NET_ROUND_PLAYER_LOSE)
 
 TIMER_WAIT_PLAYERS          = "WaitForPlayers"
 TIMER_ROUND_TIME            = "RoundTimer"
 
 local roundStatus = ROUND_WAIT
+local roundEndTime = 0
 
 local minTilesForOwnershipVictory = 0
 
 function roundWaitForPlayers()
     print("[ROUND] Waiting for players to join")
-    setRoundStatus(ROUND_WAIT)
+    roundStatus = ROUND_WAIT
+    sendRoundWaiting()
 
     timer.Create(TIMER_WAIT_PLAYERS, 2, 0, function()
         if(player.GetCount() > 0) then
@@ -26,7 +30,8 @@ end
 
 function restartRound()
     print("[ROUND] Restarting the round")
-    setRoundStatus(ROUND_PREPARE)
+    roundStatus = ROUND_PREPARE
+    sendRoundPreparing()
 
     for k, ply in pairs(team.GetPlayers(TEAM_ALIVE)) do
         ply:ResetScore()
@@ -43,7 +48,7 @@ end
 
 function beginRound()
     print("[ROUND] Starting the round")
-    setRoundStatus(ROUND_ACTIVE)
+    roundStatus = ROUND_ACTIVE
 
     for k, ply in pairs(team.GetPlayers(TEAM_ALIVE)) do
         if(!ply:IsSpectator()) then
@@ -70,12 +75,18 @@ function beginRound()
 
     StartEconomy()
 
-    timer.Create(TIMER_ROUND_TIME, ROUND_TIME, 0, function()
-        checkForVictory()
-        if isRoundActive() then endRound(nil) end
-    end)
+    roundEndTime = CurTime() + ROUND_TIME
+
+    sendRoundStarted(roundEndTime)
 
     print("[ROUND] Round has begun")
+end
+
+function GM:CheckRoundTime()
+    if(isRoundActive() and CurTime() >= roundEndTime) then
+        checkForVictory()
+        if isRoundActive() then endRound(nil) end
+    end
 end
 
 function endRound(winner)
@@ -85,8 +96,9 @@ function endRound(winner)
         timer.Destroy(TIMER_ROUND_TIME)
     end
     if roundStatus == ROUND_OVER then return end
-    setRoundStatus(ROUND_OVER)
-    setRoundWinner(winner)
+
+    roundStatus = ROUND_OVER
+    sendRoundEnd(winner)
 
     EndEconomy()
 
@@ -98,20 +110,35 @@ function endRound(winner)
 end
 
 net.Receive(NET_PLAYER_JOIN, function(len, ply)
-    sendPlayerCurrentRoundStatus(ply)
-end)
-
-function sendPlayerCurrentRoundStatus(ply)
     net.Start(NET_ROUND_STATUS_ON_JOIN)
         net.WriteInt(roundStatus, 4)
     net.Send(ply)
+end)
+
+function sendRoundWaiting()
+    net.Start(NET_ROUND_WAITING)
+    net.Broadcast()
 end
 
-function setRoundStatus(status)
-    roundStatus = status
+function sendRoundPreparing()
+    net.Start(NET_ROUND_PREPARING)
+    net.Broadcast()
+end
 
-    net.Start(NET_ROUND_STATUS_UPDATE)
-        net.WriteInt(roundStatus, 4)
+function sendRoundStarted(endTime)
+    for k, ply in pairs(player.GetAll()) do
+        net.Start(NET_ROUND_STARTED)
+            net.WriteDouble(endTime)
+        net.Send(ply)
+    end
+end
+
+function sendRoundEnd(winner)
+    local winnerName = "Nobody"
+    if IsValid(winner) then winnerName = winner:GetName() end
+
+    net.Start(NET_ROUND_OVER)
+        net.WriteString(winnerName)
     net.Broadcast()
 end
 
@@ -121,15 +148,6 @@ end
 
 function isRoundActive()
     return getRoundStatus() == ROUND_ACTIVE
-end
-
-function setRoundWinner(ply)
-    local winnerName = "Nobody"
-    if IsValid(ply) then winnerName = ply:GetName() end
-
-    net.Start(NET_ROUND_WINNER)
-        net.WriteString(winnerName)
-    net.Broadcast()
 end
 
 function checkForVictory()
