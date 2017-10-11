@@ -1,6 +1,5 @@
 
 function assignPlayersColours()
-	local numPlayers = player.GetCount()
 	local players = player.GetAll()
 	local hue = math.random(0, 360)
 	local goldenRatioConjugate = 0.618033988749895
